@@ -1,6 +1,8 @@
 import { prisma } from '../../../lib/prisma'
 import { validateRoute } from '../../../lib/auth'
 
+import { getFormattedProjects } from '../../../utils/getFormattedProjects'
+
 export default validateRoute(async (req, res, user) => {
   const { type, id, data } = req.body
 
@@ -10,24 +12,23 @@ export default validateRoute(async (req, res, user) => {
 
   try {
     switch (type) {
-      case 'activate':
-        await dbTable.update({
-          where: {
-            id,
-          },
-          data: {
-            approved: true,
-          },
+      case 'new':
+        await dbTable.create({
+          data,
         })
         break
-      case 'deactivate':
+      case 'edit':
+        if (data.id) {
+          delete data.id
+        }
+        if (data.createdOn) {
+          delete data.createdOn
+        }
         await dbTable.update({
           where: {
             id,
           },
-          data: {
-            approved: false,
-          },
+          data,
         })
         break
       case 'delete':
@@ -42,7 +43,9 @@ export default validateRoute(async (req, res, user) => {
         break
     }
 
-    projects = await prisma.projects.findMany({})
+    projects = await prisma.projects.findMany({ orderBy: { id: 'asc' } })
+
+    projects = getFormattedProjects(projects)
   } catch (error) {
     res.status(500)
     res.json({ error: 'Could not update the project', wow: error.message })

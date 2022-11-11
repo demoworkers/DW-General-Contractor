@@ -4,17 +4,17 @@ import { nanoid } from 'nanoid'
 
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import { InformationCircleIcon } from '@heroicons/react/20/solid'
+import { RadioButton } from './RadioButton'
 
 const defaultValues = {
   name: '',
-  state: 'Bidding',
-  status: 'Open',
+  state: 'BIDDING',
+  status: 'OPEN',
 }
 
 const ProjectSlideover = ({
   isNew = false,
-  projectDetails,
+  itemDetails,
   isOpen = false,
   onClose,
   onSave,
@@ -23,26 +23,19 @@ const ProjectSlideover = ({
     register,
     reset,
     handleSubmit,
-    watch,
     formState: { isDirty, errors },
   } = useForm({
     defaultValues: {
-      ...(projectDetails || defaultValues),
+      ...(itemDetails || defaultValues),
     },
   })
 
   useEffect(() => {
-    reset(projectDetails || defaultValues)
-  }, [projectDetails, isNew])
+    reset(itemDetails || defaultValues)
+  }, [itemDetails, isNew])
 
   const onSubmit = (data) => {
-    const updatedData = { ...data }
-    updatedData.label = updatedData.label.toUpperCase()
-    if (isNew) {
-      updatedData.key = nanoid()
-      updatedData.isNewNode = true
-    }
-    onSave(updatedData, isNew)
+    onSave(data, isNew)
   }
 
   return (
@@ -71,7 +64,7 @@ const ProjectSlideover = ({
                       <div className="px-4 py-6 bg-indigo-700 sm:px-6">
                         <div className="flex items-center justify-between">
                           <Dialog.Title className="text-lg font-medium text-white">
-                            Add New Project
+                            {isNew ? 'Add New Project' : 'Edit Project'}
                           </Dialog.Title>
                           <div className="flex items-center ml-3 h-7">
                             <button
@@ -109,126 +102,69 @@ const ProjectSlideover = ({
                               </div>
                             </div>
                           </div>
-                          {projectDetails?.type !== 'menu' && (
-                            <div className="pt-6 pb-5">
-                              <fieldset>
-                                <legend className="text-sm font-medium text-gray-900">
-                                  Resource type
-                                </legend>
-                                <div className="mt-2 space-y-5">
-                                  <div className="relative flex items-start">
-                                    <div className="absolute flex items-center h-5">
-                                      <input
-                                        id="asset-menu"
-                                        value="menu"
-                                        {...register('type')}
-                                        aria-describedby="asset-menu-description"
-                                        type="radio"
-                                        className="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
-                                      />
-                                    </div>
-                                    <div className="text-sm pl-7">
-                                      <label
-                                        htmlFor="asset-menu"
-                                        className="font-medium text-gray-900"
-                                      >
-                                        Menu
-                                      </label>
-                                      <p
-                                        id="asset-menu-description"
-                                        className="text-gray-500"
-                                      >
-                                        Menu with nested items - all associated
-                                        properties will be removed
-                                      </p>
-                                    </div>
-                                  </div>
-                                  <div className="relative flex items-start">
-                                    <div className="absolute flex items-center h-5">
-                                      <input
-                                        id="asset-image"
-                                        value="image"
-                                        {...register('type')}
-                                        aria-describedby="asset-image-description"
-                                        type="radio"
-                                        className="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
-                                      />
-                                    </div>
-                                    <div className="text-sm pl-7">
-                                      <label
-                                        htmlFor="asset-image"
-                                        className="font-medium text-gray-900"
-                                      >
-                                        Image
-                                      </label>
-                                      <p
-                                        id="asset-image-description"
-                                        className="text-gray-500"
-                                      >
-                                        Expandable image
-                                      </p>
-                                    </div>
-                                  </div>
-                                  <div>
-                                    <div className="relative flex items-start">
-                                      <div className="absolute flex items-center h-5">
-                                        <input
-                                          id="asset-video"
-                                          value="video"
-                                          {...register('type')}
-                                          aria-describedby="asset-video-description"
-                                          type="radio"
-                                          className="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
-                                        />
-                                      </div>
-                                      <div className="text-sm pl-7">
-                                        <label
-                                          htmlFor="asset-video"
-                                          className="font-medium text-gray-900"
-                                        >
-                                          Video
-                                        </label>
-                                        <p
-                                          id="asset-video-description"
-                                          className="text-gray-500"
-                                        >
-                                          Auto-played video
-                                        </p>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div>
-                                    <div className="relative flex items-start">
-                                      <div className="absolute flex items-center h-5">
-                                        <input
-                                          id="button"
-                                          value="button"
-                                          {...register('type')}
-                                          aria-describedby="asset-video-description"
-                                          type="radio"
-                                          className="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
-                                        />
-                                      </div>
-                                      <div className="text-sm pl-7">
-                                        <label
-                                          htmlFor="button"
-                                          className="font-medium text-gray-900"
-                                        >
-                                          Button
-                                        </label>
-                                        <p
-                                          id="button-description"
-                                          className="text-gray-500"
-                                        >
-                                          Externally linked button
-                                        </p>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </fieldset>
-                            </div>
-                          )}
+                          <div className="pt-6 pb-5">
+                            <fieldset>
+                              <legend className="text-sm font-medium text-gray-900">
+                                Status
+                              </legend>
+                              <RadioButton
+                                id="status-open"
+                                value="OPEN"
+                                {...register('status')}
+                              >
+                                Open
+                              </RadioButton>
+                              <RadioButton
+                                id="status-closed"
+                                value="CLOSED"
+                                {...register('status')}
+                              >
+                                Closed
+                              </RadioButton>
+                            </fieldset>
+                          </div>
+                          <div className="pt-6 pb-5">
+                            <fieldset>
+                              <legend className="text-sm font-medium text-gray-900">
+                                State
+                              </legend>
+                              <RadioButton
+                                id="state-bidding"
+                                value="BIDDING"
+                                {...register('state')}
+                              >
+                                Bidding
+                              </RadioButton>
+                              <RadioButton
+                                id="state-material-selection"
+                                value="MATERIAL_SELECTION"
+                                {...register('state')}
+                              >
+                                Material Selection
+                              </RadioButton>
+                              <RadioButton
+                                id="state-reconstruction"
+                                value="RECONSTRUCTION"
+                                {...register('state')}
+                              >
+                                Reconstruction
+                              </RadioButton>
+                              <RadioButton
+                                id="state-construction"
+                                value="CONSTRUCTION"
+                                {...register('state')}
+                              >
+                                Construction
+                              </RadioButton>
+                              <RadioButton
+                                id="state-punch-list"
+                                value="PUNCH_LIST"
+                                {...register('state')}
+                              >
+                                Punch List
+                              </RadioButton>
+                            </fieldset>
+                          </div>
                         </div>
                       </div>
                     </div>

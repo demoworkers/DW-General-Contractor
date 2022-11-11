@@ -13,7 +13,7 @@ import ActionButton from '../components/ActionButton'
 const Team = ({ isAdmin }) => {
   const { mutate } = useSWRConfig()
 
-  const { data: users, isLoading, isError } = useTeam()
+  const { data: users, mutate: mutateAll, isLoading, isError } = useTeam()
 
   const handleAction = async (type, userId) => {
     const updatedUsers = users
@@ -33,7 +33,9 @@ const Team = ({ isAdmin }) => {
 
     const options = { optimisticData: updatedUsers, rollbackOnError: true }
 
-    mutate('updateTeam', fetcher('updateTeam', { type, userId }), options)
+    await mutate('updateTeam', fetcher('updateTeam', { type, userId }), options)
+
+    mutateAll()
   }
 
   const renderUsersOrEmpty = (renderUsers) => {

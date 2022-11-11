@@ -1,14 +1,17 @@
 import { useState } from 'react'
+import Link from 'next/link'
 import { useSWRConfig } from 'swr'
 
-import { useProjects } from '../../lib/hooks'
+import fetcher from '../../../lib/fetcher'
+import { useProjects } from '../../../lib/hooks'
 
-import fetcher from '../../lib/fetcher'
+import { titleCase } from '../../../utils/formattedString'
 
-import MainLayout from '../components/MainLayout'
-import LoadingTable from '../components/LoadingTable'
-import ActionButton from '../components/ActionButton'
-import ProjectSlideover from '../components/ProjectSlideover'
+import MainLayout from '../../components/MainLayout'
+import LoadingTable from '../../components/LoadingTable'
+import ActionButton from '../../components/ActionButton'
+import ProjectSlideover from '../../components/ProjectSlideover'
+import Badge from '../../components/Badge'
 
 // import getServerSideProps from '../../lib/serverProps'
 
@@ -19,13 +22,28 @@ const Projects = ({ isAdmin }) => {
 
   const { mutate } = useSWRConfig()
 
-  const { data: projects, isLoading, isError } = useProjects()
+  const {
+    data: projects,
+    mutate: mutateAll,
+    isLoading,
+    isError,
+  } = useProjects()
 
-  const handleAction = async (type, id) => {
+  const handleAction = async (type, item) => {
     if (type === 'new') {
-      setIsSliderOverOpen(true)
+      setIsNew(true)
     }
 
+    if (type === 'edit') {
+      setSelectedProject(item)
+    }
+
+    if (type === 'new' || type === 'edit') {
+      setIsSliderOverOpen(true)
+      return
+    }
+
+    const { id } = item
     const updatedProjects = projects
       .map((project) => {
         if (project.id === id) {
@@ -39,7 +57,13 @@ const Projects = ({ isAdmin }) => {
 
     const options = { optimisticData: updatedProjects, rollbackOnError: true }
 
-    mutate('updateProject', fetcher('updateProject', { type, id }), options)
+    await mutate(
+      'updateProject',
+      fetcher('updateProject', { type, id }),
+      options
+    )
+
+    mutateAll()
   }
 
   const handleSliderOverClose = (isOpen) => {
@@ -50,18 +74,17 @@ const Projects = ({ isAdmin }) => {
     }
   }
 
-  const handleProjectUpdate = (updatedNode, isNewProject = false) => {
-    // let updatedNodes = [...nodes]
-    // if (isNew) {
-    //   updatedNodes.unshift(updatedNode)
-    // } else {
-    //   updatedNodes = getUpdatedNodes(nodes, updatedNode, {
-    //     type: 'update',
-    //     add: true,
-    //   })
-    // }
-    // update nodes
-    // setNodes(updatedNodes)
+  const handleProjectUpdate = async (updatedProject, isNewProject = false) => {
+    const type = isNewProject ? 'new' : 'edit'
+    const id = isNewProject ? undefined : updatedProject.id
+
+    await mutate(
+      'updateProject',
+      fetcher('updateProject', { type, id, data: updatedProject })
+    )
+
+    mutateAll()
+
     // hide slideover
     handleSliderOverClose(false)
   }
@@ -72,25 +95,24 @@ const Projects = ({ isAdmin }) => {
         <tr key={project.id}>
           <td className="py-4 pl-4 pr-3 text-sm whitespace-nowrap sm:pl-6">
             <div className="flex items-center">
-              <div className="font-medium text-gray-900">{project.name}</div>
+              <Link
+                className="font-medium text-indigo-700"
+                href={`/projects/${project.id}`}
+              >
+                {project.name}
+              </Link>
             </div>
           </td>
 
           <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
             <span className="inline-flex px-2 text-xs font-semibold leading-5 text-gray-800 capitalize rounded-full bg-slate-100">
-              {project.state}
+              {titleCase(project.state)}
             </span>
           </td>
           <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
-            {project.status === 'OPEN' ? (
-              <span className="inline-flex px-2 text-xs font-semibold leading-5 text-green-800 capitalize bg-green-100 rounded-full">
-                Open
-              </span>
-            ) : (
-              <span className="inline-flex px-2 text-xs font-semibold leading-5 text-red-800 bg-red-200 rounded-full">
-                Closed
-              </span>
-            )}
+            <Badge type={project.status === 'OPEN' ? 'success' : 'danger'}>
+              {project.status.toLowerCase()}
+            </Badge>
           </td>
           <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
             {project.createdOn}
@@ -98,11 +120,11 @@ const Projects = ({ isAdmin }) => {
           <td className="relative py-4 pl-3 pr-4 text-sm font-medium text-right whitespace-nowrap sm:pr-6">
             <ActionButton
               type="edit"
-              onClick={() => handleAction('edit', project.id)}
+              onClick={() => handleAction('edit', project)}
             />
             <ActionButton
               type="delete"
-              onClick={() => handleAction('delete', project.id)}
+              onClick={() => handleAction('delete', project)}
             />
           </td>
         </tr>
@@ -200,8 +222,8 @@ const Projects = ({ isAdmin }) => {
         </div>
       </div>
       <ProjectSlideover
-        isNewNode={isNew}
-        treeNode={selectedProject}
+        isNew={isNew}
+        itemDetails={selectedProject}
         isOpen={isSliderOverOpen}
         onClose={handleSliderOverClose}
         onSave={handleProjectUpdate}
