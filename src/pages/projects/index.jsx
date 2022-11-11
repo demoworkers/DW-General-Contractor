@@ -207,7 +207,7 @@ const Projects = ({ isAdmin }) => {
                   <tbody className="bg-white divide-y divide-gray-200">
                     {isLoading ? (
                       <tr>
-                        <td className="px-8 py-2" colSpan="4">
+                        <td className="px-8 py-2" colSpan="5">
                           <LoadingTable columns={5} />
                         </td>
                       </tr>

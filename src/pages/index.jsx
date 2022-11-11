@@ -1,23 +1,24 @@
 import Head from 'next/head'
 
-// import getServerSideProps from '../../lib/serverProps'
-
-import Dashboard from '../components/DashboardLayout'
-
-const Home = ({ isAdmin }) => {
+const Home = () => {
   return (
     <>
       <Head>
-        <title>Widget Configurator</title>
-        <meta name="description" content="Widget Configurator" />
+        <title>The General Contractor</title>
+        <meta name="description" content="The General Contractor" />
       </Head>
-      <main>
-        <Dashboard isAdmin={isAdmin} />
-      </main>
+      <main>{/* <Dashboard isAdmin={isAdmin} /> */}</main>
     </>
   )
 }
 
-// export { getServerSideProps }
+export function getServerSideProps() {
+  return {
+    redirect: {
+      destination: '/dashboard',
+      permanent: false,
+    },
+  }
+}
 
 export default Home
