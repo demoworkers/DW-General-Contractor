@@ -53,7 +53,10 @@ const MainLayout = ({ isAdmin, children }) => {
       // if (!isAdmin && navItem.forAdmin) {
       //   return null
       // }
-      navItem.current = navItem.href === path
+
+      let firstDir = path.split('/')[1]
+      firstDir = `/${firstDir}`
+      navItem.current = navItem.href === firstDir
       return navItem
     })
     .filter(Boolean)
