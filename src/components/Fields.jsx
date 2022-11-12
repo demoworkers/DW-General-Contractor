@@ -41,6 +41,25 @@ export const TextField = React.forwardRef(function TextField(
   )
 })
 
+export const TextArea = React.forwardRef(function TextArea(
+  { id, label, rows = 4, className = '', error, ...props },
+  ref
+) {
+  return (
+    <div className={className}>
+      {label && <Label id={id}>{label}</Label>}
+      <textarea
+        rows={rows}
+        ref={ref}
+        id={id}
+        {...props}
+        className={clsx(formClasses, error && fieldErrorClasses)}
+      />
+      {error && <span className={errorClasses}>{error.message}</span>}
+    </div>
+  )
+})
+
 export const SelectField = React.forwardRef(function SelectField(
   { id, label, className = '', ...props },
   ref

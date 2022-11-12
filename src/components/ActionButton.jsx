@@ -6,7 +6,13 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 
-const ActionButton = ({ type, onClick, children }) => {
+const ActionButton = ({
+  type,
+  showIcon = true,
+  onClick,
+  className = '',
+  children,
+}) => {
   let title = ''
   let icon = ''
   let classes =
@@ -47,9 +53,13 @@ const ActionButton = ({ type, onClick, children }) => {
       break
   }
 
+  if (className) {
+    classes += ` ${className}`
+  }
+
   return (
     <button type="button" title={title} className={classes} onClick={onClick}>
-      {icon} {children && <span>{children}</span>}
+      {showIcon && icon} {children && <span>{children}</span>}
     </button>
   )
 }
