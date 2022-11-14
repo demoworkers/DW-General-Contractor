@@ -30,12 +30,12 @@ let navigation = [
     href: '/team',
     icon: UsersIcon,
   },
-  {
-    name: 'Settings',
-    forAdmin: true,
-    href: '/settings',
-    icon: Cog8ToothIcon,
-  },
+  // {
+  //   name: 'Settings',
+  //   forAdmin: true,
+  //   href: '/settings',
+  //   icon: Cog8ToothIcon,
+  // },
 ]
 
 function classNames(...classes) {

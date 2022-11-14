@@ -1,58 +1,76 @@
 import { nanoid } from 'nanoid'
 import { useState } from 'react'
-import { insert } from 'utils/arrayManipulate'
+import { insert } from '../../utils/arrayManipulate'
 import ActionButton from './ActionButton'
 import DividerWithButton from './DividerWithButton'
 import EmptyState from './EmptyState'
 import { TextField } from './Fields'
 import ScopeItem from './ScopeItem'
 
-const Stage1 = () => {
-  const [scopeItems, setScopeItems] = useState([])
+const Stage1 = ({ stageConfig }) => {
+  const [scopeItems, setScopeItems] = useState(stageConfig.scopeOfWork || [])
+
   const [showFirstFields, setShowFirstFields] = useState(false)
 
-  const handleAddNewItem = () => {
-    setShowFirstFields(true)
+  const handleAddItem = () => {
+    const newItem = {
+      id: nanoid(),
+      label: 'Label',
+      children: [],
+    }
+    let updatedScopeItems = [...scopeItems]
+    updatedScopeItems.push(newItem)
+    setScopeItems(updatedScopeItems)
   }
 
-  const handleAddItem = (addAtIndex) => {
-    let newItem = {
-      id: nanoid(),
-      label: 'Bathroom Remodeling Labor',
-      children: [
-        {
-          id: nanoid(),
-          label:
-            'General Conditions (job site protection, job site clean up, dumping fee from construction waste)',
-        },
-      ],
-    }
-
-    let updatedScopeItems = insert(scopeItems, addAtIndex, newItem)
-
-    newItem = {
-      id: nanoid(),
-      label: 'Tile',
-      children: [
-        {
-          id: nanoid(),
-          label:
-            'Wall Tile - install standard 12x24 wall tile in showeror tub area only - price may vary with final tile layout - price includes rough material (durock, screws, etc)',
-        },
-        {
-          id: nanoid(),
-          label:
-            'Floor Tile - install standard 12x24 floor tile - price may vary with final tile layout - price includes rough material (durock, screws, etc)',
-        },
-      ],
-    }
-
-    updatedScopeItems = insert(updatedScopeItems, addAtIndex, newItem)
-
+  const handleItemUpdate = (itemIdx, newValue) => {
+    let updatedScopeItems = [...scopeItems]
+    updatedScopeItems[itemIdx].label = newValue
     setScopeItems(updatedScopeItems)
+  }
 
-    if (showFirstFields) {
-      setShowFirstFields(false)
+  const handleItemDelete = (itemIdx) => {
+    let updatedScopeItems = [...scopeItems]
+    updatedScopeItems.splice(itemIdx, 1)
+    setScopeItems(updatedScopeItems)
+  }
+
+  const handleChildAction = (
+    type,
+    parentIdx,
+    childIdx = undefined,
+    newValue = undefined
+  ) => {
+    let updatedScopeItems = [...scopeItems]
+    let isUpdated = false
+    switch (type) {
+      case 'new':
+        isUpdated = true
+
+        updatedScopeItems[parentIdx].children.push({
+          id: nanoid(),
+          label: newValue,
+        })
+        break
+
+      case 'edit':
+        isUpdated = true
+
+        updatedScopeItems[parentIdx].children[childIdx].label = newValue
+        break
+
+      case 'delete':
+        isUpdated = true
+
+        updatedScopeItems[parentIdx].children.splice(childIdx, 1)
+        break
+
+      default:
+        break
+    }
+
+    if (isUpdated) {
+      setScopeItems(updatedScopeItems)
     }
   }
 
@@ -60,7 +78,7 @@ const Stage1 = () => {
     if (!scopeItems.length && !showFirstFields) {
       return (
         <div className="px-4 py-4 overflow-hidden bg-white shadow sm:rounded-md sm:px-6">
-          <EmptyState onClick={handleAddNewItem} />
+          <EmptyState onClick={handleAddItem} />
         </div>
       )
     }
@@ -91,10 +109,14 @@ const Stage1 = () => {
             const isLast = index === scopeItems.length - 1
             return (
               <div key={scopeItem.id}>
-                <ScopeItem scopeItem={scopeItem} />
-                {isLast && (
-                  <DividerWithButton onClick={() => console.log(index)} />
-                )}
+                <ScopeItem
+                  scopeItemIdx={index}
+                  scopeItem={scopeItem}
+                  onChildAction={handleChildAction}
+                  onUpdate={handleItemUpdate}
+                  onDelete={handleItemDelete}
+                />
+                {isLast && <DividerWithButton onClick={handleAddItem} />}
               </div>
             )
           })}

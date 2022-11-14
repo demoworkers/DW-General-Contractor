@@ -47,7 +47,7 @@ const Login = () => {
       }
     }
 
-    router.push('/projects')
+    router.push('/dashboard')
   }
 
   return (

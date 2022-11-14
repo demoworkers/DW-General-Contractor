@@ -30,6 +30,9 @@ module.exports = {
       maxWidth: {
         '2xl': '40rem',
       },
+      width: {
+        '88%': '88%',
+      },
     },
   },
   plugins: [require('@tailwindcss/forms')],

@@ -1,19 +1,23 @@
-import { Fragment } from 'react'
-import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import ActionButton from './ActionButton'
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
-
-const Navbar = ({ projectInfo = { name: 'Sky Scrapper', status: '' } }) => {
+const Navbar = ({ projectInfo = { name: '', status: '' } }) => {
   return (
     <nav className="mb-1 bg-white shadow">
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
-            <div className="flex items-center flex-shrink-0">
+            <div className="flex items-center justify-between flex-shrink-0">
               <h2 className="font-bold">{projectInfo.name}</h2>
+            </div>
+          </div>
+          <div className="flex">
+            <div className="flex items-center justify-between flex-shrink-0">
+              <ActionButton type="edit" showIcon={false}>
+                Save
+              </ActionButton>
+              <ActionButton type="edit" showIcon={false} className="mr-0">
+                Next Stage
+              </ActionButton>
             </div>
           </div>
         </div>
