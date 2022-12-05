@@ -1,14 +1,16 @@
 import { useSWRConfig } from 'swr'
 
 import { useTeam } from '../../lib/hooks'
+import { titleCase } from '../../utils/formattedString'
 
 import fetcher from '../../lib/fetcher'
 
 import MainLayout from '../components/MainLayout'
 import LoadingTable from '../components/LoadingTable'
 import ActionButton from '../components/ActionButton'
+import Dropdown from '../components/Dropdown'
 
-// import getServerSideProps from '../../lib/serverProps'
+import getServerSideProps from '../../lib/serverProps'
 
 const Team = ({ isAdmin }) => {
   const { mutate } = useSWRConfig()
@@ -38,6 +40,20 @@ const Team = ({ isAdmin }) => {
     mutateAll()
   }
 
+  const updateUserRole = async (userId, role) => {
+    const userUpdate = await fetcher('updateUserRole', {
+      userId,
+      role,
+    })
+
+    if (userUpdate.error) {
+      console.error(userUpdate.error)
+      return
+    }
+
+    console.log(userUpdate.message)
+  }
+
   const renderUsersOrEmpty = (renderUsers) => {
     if (renderUsers.length !== 0) {
       return renderUsers.map((user) => (
@@ -63,7 +79,15 @@ const Team = ({ isAdmin }) => {
             )}
           </td>
           <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
-            {user.role === 'ADMIN' ? 'Admin' : 'Member'}
+            {isAdmin ? (
+              <Dropdown
+                selected={user.role}
+                list={['Admin', 'Manager', 'Designer', 'Trades', 'User']}
+                onChange={(listItem) => updateUserRole(user.id, listItem)}
+              />
+            ) : (
+              titleCase(user.role)
+            )}
           </td>
           <td className="relative py-4 pl-3 pr-4 text-sm font-medium text-right whitespace-nowrap sm:pr-6">
             {user.approved ? (
@@ -114,9 +138,9 @@ const Team = ({ isAdmin }) => {
           </div>
         </div>
         <div className="flex flex-col mt-8">
-          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div className="-mx-4 -my-2 sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-              <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+              <div className="shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
                 <table className="min-w-full divide-y divide-gray-300">
                   <thead className="bg-gray-50">
                     <tr>
@@ -168,6 +192,6 @@ const Team = ({ isAdmin }) => {
   )
 }
 
-// export { getServerSideProps }
+export { getServerSideProps }
 
 export default Team

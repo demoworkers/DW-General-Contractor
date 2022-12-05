@@ -44,10 +44,26 @@ model ProjectDetails {
   projectsId Int?
 }
 
+model Permission {
+  id            Int              @id @default(autoincrement())
+  name          String           @unique
+  section       String
+  Permissions   RolePermissions? @relation(fields: [permissionsId], references: [id])
+  permissionsId Int?
+}
+
+model RolePermissions {
+  id          Int          @id @default(autoincrement())
+  name        Role         @unique
+  permissions Permission[]
+}
+
 enum Role {
-  USER
-  MANAGER
   ADMIN
+  MANAGER
+  DESIGNER
+  TRADES
+  USER
 }
 
 enum ProjectStatus {
