@@ -8,42 +8,6 @@ datasource db {
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-model User {
-  id          Int        @id @default(autoincrement())
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  firstName   String
-  lastName    String?
-  email       String     @unique
-  password    String
-  acceptTerms Boolean
-  role        Role       @default(USER)
-  approved    Boolean    @default(false)
-  projects    Projects[]
-}
-
-model Projects {
-  id             Int              @id @default(autoincrement())
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  name           String
-  status         ProjectStatus    @default(OPEN)
-  state          ProjectStage     @default(BIDDING)
-  user           User?            @relation(fields: [userId], references: [id])
-  userId         Int?
-  projectDetails ProjectDetails[]
-}
-
-model ProjectDetails {
-  id         Int          @id @default(autoincrement())
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  stage      ProjectStage @default(BIDDING)
-  config     Json
-  Projects   Projects?    @relation(fields: [projectsId], references: [id])
-  projectsId Int?
-}
-
 model Permission {
   id            Int              @id @default(autoincrement())
   name          String           @unique
@@ -56,6 +20,69 @@ model RolePermissions {
   id          Int          @id @default(autoincrement())
   name        Role         @unique
   permissions Permission[]
+}
+
+model User {
+  id          Int         @id @default(autoincrement())
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  firstName   String
+  lastName    String?
+  email       String      @unique
+  password    String
+  acceptTerms Boolean
+  role        Role        @default(USER)
+  approved    Boolean     @default(false)
+  projects    Projects[]
+  Notes       Notes[]
+  NoteEntry   NoteEntry[]
+}
+
+model Projects {
+  id             Int              @id @default(autoincrement())
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  name           String
+  status         ProjectStatus    @default(OPEN)
+  state          ProjectStage     @default(BIDDING)
+  user           User?            @relation(fields: [userId], references: [id])
+  userId         Int?
+  projectDetails ProjectDetails[]
+  notes          Notes[]
+  NoteEntry      NoteEntry[]
+}
+
+model ProjectDetails {
+  id         Int          @id @default(autoincrement())
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  stage      ProjectStage @default(BIDDING)
+  config     Json
+  Projects   Projects?    @relation(fields: [projectsId], references: [id])
+  projectsId Int?
+}
+
+model Notes {
+  id         Int         @id @default(autoincrement())
+  name       String
+  created_by User        @relation(fields: [createdBy], references: [id])
+  createdBy  Int
+  created_at DateTime    @default(now())
+  project    Projects?   @relation(fields: [projectId], references: [id])
+  projectId  Int?
+  entries    NoteEntry[]
+}
+
+model NoteEntry {
+  id         Int       @id @default(autoincrement())
+  entry      String
+  created_by User      @relation(fields: [createdBy], references: [id])
+  createdBy  Int
+  created_at DateTime  @default(now())
+  note       Notes?    @relation(fields: [noteId], references: [id])
+  noteId     Int?
+  project    Projects? @relation(fields: [projectId], references: [id])
+  projectId  Int?
 }
 
 enum Role {

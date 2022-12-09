@@ -8,12 +8,13 @@ import { s3Client } from '../../../lib/s3'
 import { validateRoute } from '../../../lib/auth'
 
 export default validateRoute(async (req, res, user) => {
+  console.log('hehe')
   const form = new formidable.IncomingForm()
 
   form.parse(req, function (err, fields, files) {
     // TODO: file type
     const fileName = nanoid() + '.png'
-    const file = files.uploadedFile
+    const file = files.files
 
     const fileStream = fs.createReadStream(file.filepath)
 

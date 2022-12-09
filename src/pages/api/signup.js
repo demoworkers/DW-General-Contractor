@@ -44,14 +44,14 @@ const handler = nc()
         approved: user.approved,
       },
       process.env.JWT_SECRET,
-      { expiresIn: '72h' }
+      { expiresIn: '144h' }
     )
 
     res.setHeader(
       'Set-Cookie',
       cookie.serialize(process.env.JWT_COOKIE_NAME, token, {
         httpOnly: true,
-        maxAge: 72 * 60 * 60,
+        maxAge: 144 * 60 * 60,
         path: '/',
         sameSite: 'strict',
         secure: process.env.NODE_ENV === 'production',
