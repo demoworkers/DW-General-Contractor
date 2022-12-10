@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 
 import {
   BookOpenIcon,
@@ -11,6 +12,7 @@ import {
 import { prisma } from '../../../lib/prisma'
 
 import MainLayout from '../../components/MainLayout'
+import StageLayout from '../../components/StageLayout'
 import NotesLayout from '../../components/NotesLayout'
 import Navbar from '../../components/Navbar'
 import Breadcrumbs from '../../components/Breadcrumbs'
@@ -21,12 +23,15 @@ function classNames(...classes) {
 }
 
 const Project = ({ stageConfig }) => {
-  const state = 'BIDDING'
+  const router = useRouter()
+  const { id } = router.query
+
+  const stage = 'BIDDING'
 
   // const { name: projectName } = stageConfig.projectInfo
   const projectName = 'Random Project'
 
-  const [currentTab, setCurrentTab] = useState('notes')
+  const [currentTab, setCurrentTab] = useState('stages')
 
   const [tabs, setTabs] = useState([
     { name: 'Stages', id: 'stages' },
@@ -106,8 +111,11 @@ const Project = ({ stageConfig }) => {
       </div>
       {/* <Breadcrumbs /> */}
       {/* {state === 'BIDDING' ? <Stage1 stageConfig={stageConfig} /> : null} */}
-      {/* NOTES LAYOUT */}
-      <NotesLayout />
+      {currentTab === 'stages' ? (
+        <StageLayout projectId={id} stage={stage} />
+      ) : (
+        <NotesLayout projectId={id} />
+      )}
     </MainLayout>
   )
 }

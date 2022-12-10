@@ -8,11 +8,13 @@ import { formatDate } from '../../utils/dateAndTime'
 
 import Slideover from './Slideover'
 
-const NotesLayout = () => {
-  const router = useRouter()
-  const { id } = router.query
-
-  const { data: notes, mutate: mutateAll, isLoading, isError } = useNotes(id)
+const NotesLayout = ({ projectId }) => {
+  const {
+    data: notes,
+    mutate: mutateAll,
+    isLoading,
+    isError,
+  } = useNotes(projectId)
 
   const [isNewNote, setIsNewNote] = useState(false)
   const [selectedNote, setSelectedNote] = useState(null)
@@ -38,7 +40,7 @@ const NotesLayout = () => {
 
   const handleNodeUpdate = async ({ noteName }, entry) => {
     const response = await fetcher('notes/add', {
-      projectId: id,
+      projectId: projectId,
       noteName,
       entry,
     })
