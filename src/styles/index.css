@@ -71,6 +71,14 @@
   width: 100%;
 }
 
+.node-actions {
+  /* display: none; */
+}
+
+li.p-treenode:hover .node-actions {
+  display: inline-block;
+}
+
 /* HIDE TOGGLE FOR LEAF */
 .p-treenode-leaf > .p-treenode-content .p-tree-toggler {
   visibility: hidden;

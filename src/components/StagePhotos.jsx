@@ -7,7 +7,7 @@ import { Tooltip } from 'primereact/tooltip'
 import { Tag } from 'primereact/tag'
 import { XCircleIcon } from '@heroicons/react/20/solid'
 
-export const StagePhotos = () => {
+const StagePhotos = () => {
   const [totalSize, setTotalSize] = useState(0)
   const toast = useRef(null)
   const fileUploadRef = useRef(null)

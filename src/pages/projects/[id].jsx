@@ -22,6 +22,11 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
+const tabs = [
+  { name: 'Stages', id: 'stages' },
+  { name: 'Notes', id: 'notes' },
+]
+
 const Project = ({ stageConfig }) => {
   const router = useRouter()
   const { id } = router.query
@@ -33,14 +38,8 @@ const Project = ({ stageConfig }) => {
 
   const [currentTab, setCurrentTab] = useState('stages')
 
-  const [tabs, setTabs] = useState([
-    { name: 'Stages', id: 'stages' },
-    { name: 'Notes', id: 'notes' },
-  ])
-
   const handleTabChange = (tabId) => {
     setCurrentTab(tabId)
-    // TODO: get notes here
   }
 
   return (

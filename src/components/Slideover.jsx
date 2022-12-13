@@ -62,21 +62,6 @@ const Slideover = ({
     setEditorLoaded(true)
   }, [])
 
-  useEffect(() => {
-    setNoteEntries([])
-    setEditorData()
-    if (noteId) {
-      setLoadingNoteEntries(true)
-      // get data against note Id
-      const fetchNoteEntries = async () => {
-        const entries = await fetcher('notes/entries', { noteId })
-        setNoteEntries(entries)
-        setLoadingNoteEntries(false)
-      }
-      fetchNoteEntries()
-    }
-  }, [noteId])
-
   const {
     register,
     reset,

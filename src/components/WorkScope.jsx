@@ -1,18 +1,43 @@
+import { useState } from 'react'
 import { Tree } from 'primereact/tree'
 
 import 'primeicons/primeicons.css'
 import 'primereact/resources/themes/lara-light-indigo/theme.css'
-import { PlusCircleIcon, XCircleIcon } from '@heroicons/react/24/outline'
+import {
+  PencilSquareIcon,
+  PlusCircleIcon,
+  XCircleIcon,
+} from '@heroicons/react/24/outline'
 
-const WorkScope = ({ nodes, onNodeAdd, onNodeDelete }) => {
+import WorkScopeSlideover from './WorkScopeSlideover'
+
+const WorkScope = ({ nodes, onNodeUpdate, onNodeAdd, onNodeDelete }) => {
+  const [isSliderOverOpen, setIsSliderOverOpen] = useState(false)
+  const [selectedNode, setSelectedNode] = useState(null)
+
+  const handleNodeClick = (node) => {
+    setSelectedNode(node)
+    setIsSliderOverOpen(true)
+  }
+
+  const editIcon = (node) => {
+    return (
+      <PencilSquareIcon
+        className="inline-block w-5 h-5 mb-1 ml-3 text-blue-300 cursor-pointer"
+        onClick={() => handleNodeClick(node)}
+      />
+    )
+  }
+
   const plusIcon = (node) => {
     return node.children ? (
       <PlusCircleIcon
-        className="inline-block w-6 h-6 mb-1 ml-3 cursor-pointer text-emerald-300"
+        className="inline-block w-6 h-6 mb-1 ml-1 cursor-pointer text-emerald-300"
         onClick={() => onNodeAdd(node.key)}
       />
     ) : null
   }
+
   const cancelIcon = (node) => {
     return (
       <XCircleIcon
@@ -25,19 +50,38 @@ const WorkScope = ({ nodes, onNodeAdd, onNodeDelete }) => {
   const nodeTemplate = (node, options) => {
     let label = (
       <>
-        <b>{node.label}</b> {plusIcon(node)} {cancelIcon(node)}
+        <b>{node.label}</b>
+        <span className="node-actions">
+          {editIcon(node)} {plusIcon(node)} {cancelIcon(node)}
+        </span>
       </>
     )
 
     if (!node.children) {
       label = (
         <>
-          <span>{node.label}</span> {cancelIcon(node)}
+          <span>{node.label}</span>
+          <span className="node-actions">
+            {editIcon(node)} {cancelIcon(node)}
+          </span>
         </>
       )
     }
 
-    return <span className={options.className}>{label}</span>
+    const nodeValue = <span className={options.className}>{label}</span>
+    return nodeValue
+  }
+
+  const handleSlideOverClose = (isOpen) => {
+    setIsSliderOverOpen(isOpen)
+    if (!isOpen) {
+      setSelectedNode(null)
+    }
+  }
+
+  const handleNodeUpdate = (value) => {
+    onNodeUpdate({ key: selectedNode.key, label: value.scopeItemDetails })
+    handleSlideOverClose(!isSliderOverOpen)
   }
 
   return (
@@ -57,6 +101,12 @@ const WorkScope = ({ nodes, onNodeAdd, onNodeDelete }) => {
         </div>
       </div>
       <Tree value={nodes} nodeTemplate={nodeTemplate} />
+      <WorkScopeSlideover
+        itemDetails={selectedNode}
+        isOpen={isSliderOverOpen}
+        onClose={handleSlideOverClose}
+        onSave={handleNodeUpdate}
+      />
     </>
   )
 }

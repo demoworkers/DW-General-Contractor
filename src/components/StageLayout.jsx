@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { nanoid } from 'nanoid'
 
 import fetcher from '../../lib/fetcher'
-import { deleteNode } from '../../utils/deleteNode'
+import { deleteNode, updateNode } from '../../utils/nodeManipulate'
 
 import WorkScope from './WorkScope'
 import StageNotes from './StageNotes'
@@ -29,6 +29,11 @@ const StageLayout = ({ projectId, stage }) => {
   const [notes, setNotes] = useState('')
 
   const [workScope, setWorkScope] = useState(workScopeDB)
+
+  const handleScopeItemUpdate = (updatedNode) => {
+    const updatedNodes = updateNode(workScope, updatedNode)
+    setWorkScope(updatedNodes)
+  }
 
   const handleScopeItemAdd = (parentItemKey) => {
     let updatedWorkScope = JSON.parse(JSON.stringify(workScope))
@@ -64,6 +69,7 @@ const StageLayout = ({ projectId, stage }) => {
     <div>
       <WorkScope
         nodes={workScope}
+        onNodeUpdate={handleScopeItemUpdate}
         onNodeAdd={handleScopeItemAdd}
         onNodeDelete={handleScopeItemDelete}
       />
