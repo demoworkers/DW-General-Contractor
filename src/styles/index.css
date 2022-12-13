@@ -113,6 +113,7 @@ li.p-treenode:hover .node-actions {
 
 .p-fileupload-buttonbar {
   justify-content: flex-end !important;
+  padding-right: 0.5rem !important;
 }
 
 .p-fileupload-choose .p-button-icon {

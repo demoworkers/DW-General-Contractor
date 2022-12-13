@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 
+import { BookOpenIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
+
 import { prisma } from '../../../lib/prisma'
 
 import MainLayout from '../../components/MainLayout'
@@ -8,18 +10,6 @@ import StageLayout from '../../components/StageLayout'
 import NotesLayout from '../../components/NotesLayout'
 import NavbarTabs from '../../components/NavbarTabs'
 import StatusPill from '../../components/StatusPill'
-
-import { titleCase } from '../../../utils/formattedString'
-import { BookOpenIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
-
-const tabs = [
-  { name: 'Stages', id: 'stages' },
-  { name: 'Notes', id: 'notes' },
-]
 
 const Project = ({ projectInfo }) => {
   console.log(projectInfo)
@@ -29,9 +19,12 @@ const Project = ({ projectInfo }) => {
     stage: projectStage,
   } = projectInfo
 
-  const stageId = projectInfo.projectDetails.filter(
-    (projectDetail) => projectDetail.stage === projectStage
-  )[0].id
+  let stageId = null
+  if (projectInfo.projectDetails.length) {
+    stageId = projectInfo.projectDetails.filter(
+      (projectDetail) => projectDetail.stage === projectStage
+    )[0].id
+  }
 
   const router = useRouter()
   const { id } = router.query

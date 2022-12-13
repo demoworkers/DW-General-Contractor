@@ -8,8 +8,6 @@ import { RadioButton } from './RadioButton'
 
 const defaultValues = {
   name: '',
-  state: 'BIDDING',
-  status: 'OPEN',
 }
 
 const ProjectSlideover = ({
@@ -102,7 +100,7 @@ const ProjectSlideover = ({
                               </div>
                             </div>
                           </div>
-                          <div className="pt-6 pb-5">
+                          {/* <div className="pt-6 pb-5">
                             <fieldset>
                               <legend className="text-sm font-medium text-gray-900">
                                 Status
@@ -164,7 +162,7 @@ const ProjectSlideover = ({
                                 Punch List
                               </RadioButton>
                             </fieldset>
-                          </div>
+                          </div> */}
                         </div>
                       </div>
                     </div>

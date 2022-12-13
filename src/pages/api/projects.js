@@ -3,7 +3,9 @@ import { validateRoute } from '../../../lib/auth'
 import { getFormattedProjects } from '../../../utils/getFormattedProjects'
 
 export default validateRoute(async (req, res, user) => {
-  const projects = await prisma.projects.findMany({ orderBy: { id: 'asc' } })
+  const projects = await prisma.projects.findMany({
+    orderBy: { createdAt: 'desc' },
+  })
 
   res.json(getFormattedProjects(projects))
 })

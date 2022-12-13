@@ -103,10 +103,9 @@ const Projects = ({ isAdmin }) => {
               </Link>
             </div>
           </td>
-
           <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
             <span className="inline-flex px-2 text-xs font-semibold leading-5 text-gray-800 capitalize rounded-full bg-slate-100">
-              {titleCase(project.state)}
+              {titleCase(project.stage)}
             </span>
           </td>
           <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
@@ -182,7 +181,7 @@ const Projects = ({ isAdmin }) => {
                         scope="col"
                         className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                       >
-                        State
+                        Stage
                       </th>
                       <th
                         scope="col"

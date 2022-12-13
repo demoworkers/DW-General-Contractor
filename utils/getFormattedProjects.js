@@ -13,7 +13,7 @@ export const getFormattedProjects = (projects) => {
     formattedProjects.push({
       id: project.id,
       name: project.name,
-      state: project.state,
+      stage: project.stage,
       status: project.status,
       createdOn: projectCreatedDate,
     })
