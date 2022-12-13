@@ -53,13 +53,13 @@ model Projects {
 }
 
 model ProjectDetails {
-  id         Int          @id @default(autoincrement())
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  stage      ProjectStage @default(BIDDING)
-  config     Json
-  Projects   Projects?    @relation(fields: [projectsId], references: [id])
-  projectsId Int?
+  id        Int          @id @default(autoincrement())
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  stage     ProjectStage @default(BIDDING)
+  config    Json
+  Projects  Projects?    @relation(fields: [projectId], references: [id])
+  projectId Int?
 }
 
 model Notes {

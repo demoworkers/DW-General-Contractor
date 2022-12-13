@@ -215,8 +215,8 @@ const MainLayout = ({ isAdmin, children }) => {
             <Bars3Icon className="w-6 h-6" aria-hidden="true" />
           </button>
         </div>
-        <main className="flex-1">
-          <div className="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <main className="flex-1 ">
+          <div className="min-h-screen px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
             {children}
           </div>
         </main>

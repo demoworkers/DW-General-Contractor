@@ -25,7 +25,7 @@ export const updateNode = (nodes, updatedNode) => {
     })
     .filter((node) => {
       if ('children' in node) {
-        node.children = deleteNode(node.children, updatedNode)
+        node.children = updateNode(node.children, updatedNode)
       }
       return true
     })
