@@ -101,3 +101,24 @@ li.p-treenode:hover .node-actions {
 .p-fileupload-files {
   display: flex;
 }
+
+.p-fileupload-choose {
+  padding-top: 0.25rem !important;
+  padding-bottom: 0.25rem !important;
+  padding-left: 0.75rem !important;
+  padding-right: 0.75rem !important;
+  background: rgb(79 70 229 / var(--tw-bg-opacity)) !important;
+  cursor: pointer;
+}
+
+.p-fileupload-buttonbar {
+  justify-content: flex-end !important;
+}
+
+.p-fileupload-choose .p-button-icon {
+  font-size: 0.825rem;
+  margin-right: 0.25rem !important;
+}
+.p-fileupload-choose .p-button-label {
+  font-weight: 500 !important;
+}

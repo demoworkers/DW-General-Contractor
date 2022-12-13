@@ -7,6 +7,7 @@ import { useNotes } from '../../lib/hooks'
 import { formatDate } from '../../utils/dateAndTime'
 
 import Slideover from './Slideover'
+import { PlusIcon } from '@heroicons/react/24/outline'
 
 const NotesLayout = ({ projectId }) => {
   const {
@@ -49,6 +50,11 @@ const NotesLayout = ({ projectId }) => {
   return (
     <>
       <div className="my-4 md:flex md:items-center md:justify-end">
+        <div className="flex-1 min-w-0">
+          <h3 className="relative text-lg font-bold leading-7 text-gray-900 sm:truncate sm:text-xl sm:tracking-tight">
+            Notes
+          </h3>
+        </div>
         <div className="flex mt-4 md:mt-0 md:ml-4">
           <button
             type="button"
@@ -58,6 +64,7 @@ const NotesLayout = ({ projectId }) => {
               openSlideover()
             }}
           >
+            <PlusIcon className="w-4 h-4 mr-1" />
             Add note
           </button>
         </div>

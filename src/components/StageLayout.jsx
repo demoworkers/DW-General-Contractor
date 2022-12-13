@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { nanoid } from 'nanoid'
 
+import { ArrowRightIcon } from '@heroicons/react/24/outline'
+
 import fetcher from '../../lib/fetcher'
 import { deleteNode, updateNode } from '../../utils/nodeManipulate'
 
@@ -12,7 +14,7 @@ import { Spinner } from './Spinner'
 const workScopeDB = []
 const stageNotesDB = ''
 
-const StageLayout = ({ projectId, stage }) => {
+const StageLayout = ({ projectId, stageId }) => {
   const [workScope, setWorkScope] = useState(workScopeDB)
   const [notes, setNotes] = useState(stageNotesDB)
   const [isSaving, setIsSaving] = useState(false)
@@ -58,7 +60,7 @@ const StageLayout = ({ projectId, stage }) => {
     // save here - attach photos
     const updatedConfig = await fetcher('stage/save', {
       projectId,
-      stageId: 1,
+      stageId,
       workScope,
       notes,
     })
@@ -84,9 +86,16 @@ const StageLayout = ({ projectId, stage }) => {
         <button
           type="button"
           onClick={isSaving ? null : handleStageSave}
-          className="inline-flex items-center px-4 py-1 text-base font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          className="inline-flex items-center px-3 py-1 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none"
         >
-          {isSaving ? <Spinner /> : 'Save'}
+          {isSaving ? (
+            <Spinner />
+          ) : (
+            <>
+              <span>Next Stage</span>{' '}
+              <ArrowRightIcon className="w-4 h-4 ml-1" />
+            </>
+          )}
         </button>
       </footer>
     </div>
