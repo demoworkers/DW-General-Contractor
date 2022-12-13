@@ -55,6 +55,24 @@ const Slideover = ({
   }, [imageFiles])
 
   useEffect(() => {
+    async function fetchData() {
+      setLoadingNoteEntries(true)
+      const entries = await fetcher('notes/entries', {
+        noteId,
+      })
+      setNoteEntries(entries)
+      setLoadingNoteEntries(false)
+    }
+
+    if (isOpen) {
+      fetchData()
+    } else {
+      setNoteEntries([])
+      setEditorData('')
+    }
+  }, [isOpen])
+
+  useEffect(() => {
     editorRef.current = {
       CKEditor: require('@ckeditor/ckeditor5-react').CKEditor,
       ClassicEditor: require('@ckeditor/ckeditor5-build-classic'),
@@ -70,7 +88,7 @@ const Slideover = ({
   } = useForm()
 
   const onSubmit = (data) => {
-    onSave(data, editorData)
+    onSave(data, editorData, noteId)
   }
 
   return (
@@ -178,25 +196,33 @@ const Slideover = ({
                       </div>
                       {noteEntries.length > 0 && (
                         <div className="flex flex-col justify-between flex-1 noteEntries">
-                          <div className="px-4 divide-y divide-gray-200 sm:px-6">
-                            {noteEntries.map((noteEntry) => (
-                              <div
-                                key={noteEntry.id}
-                                className="py-5 noteEntry"
-                              >
-                                <div className="mb-4">
-                                  <h6 className="text-sm font-bold leading-3">
-                                    {noteEntry.created_by.firstName}{' '}
-                                    {noteEntry.created_by.lastName}
-                                  </h6>
-                                  <span className="text-xs text-gray-600">
-                                    {calculateTimeSince(noteEntry.created_at)}
-                                  </span>
-                                </div>
-                                <Markup content={noteEntry.entry} />
-                              </div>
-                            ))}
+                          <div className="relative py-4">
+                            <div
+                              className="absolute inset-0 flex items-center"
+                              aria-hidden="true"
+                            >
+                              <div className="w-full border-t border-gray-300" />
+                            </div>
+                            <div className="relative flex justify-center">
+                              <span className="px-2 text-sm text-gray-500 bg-white">
+                                Previous Notes
+                              </span>
+                            </div>
                           </div>
+                          {noteEntries.map((noteEntry) => (
+                            <div key={noteEntry.id} className="px-4 mb-12">
+                              <div className="mb-4">
+                                <h6 className="text-sm font-bold leading-3">
+                                  {noteEntry.created_by.firstName}{' '}
+                                  {noteEntry.created_by.lastName}
+                                </h6>
+                                <span className="text-xs text-gray-600">
+                                  {calculateTimeSince(noteEntry.created_at)}
+                                </span>
+                              </div>
+                              <Markup content={noteEntry.entry} />
+                            </div>
+                          ))}
                         </div>
                       )}
                       {loadingNoteEntries && <Ellipsis />}
@@ -209,21 +235,12 @@ const Slideover = ({
                       >
                         Cancel
                       </button>
-                      {isDirty ? (
-                        <button
-                          type="submit"
-                          className="inline-flex justify-center px-2 py-1 ml-4 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        >
-                          Save
-                        </button>
-                      ) : (
-                        <button
-                          type="button"
-                          className="inline-flex justify-center px-2 py-1 ml-4 text-sm font-medium text-white bg-indigo-300 border border-transparent rounded-md shadow-sm cursor-not-allowed hover:bg-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:ring-offset-2"
-                        >
-                          Save
-                        </button>
-                      )}
+                      <button
+                        type="submit"
+                        className="inline-flex justify-center px-2 py-1 ml-4 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                      >
+                        Save
+                      </button>
                     </div>
                   </form>
                 </Dialog.Panel>

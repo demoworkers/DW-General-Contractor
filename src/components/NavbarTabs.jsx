@@ -134,7 +134,7 @@ const NavbarTabs = ({ currentStage }) => {
   }
 
   return (
-    <div className="mt-8 bg-white border-md lg:border-t lg:border-b lg:border-gray-200">
+    <div className="mt-8 bg-white rounded-md lg:border-t lg:border-b lg:border-gray-200">
       <nav className="mx-auto max-w-7xl " aria-label="Progress">
         <ol className="overflow-hidden rounded-md lg:flex lg:rounded-none lg:border-l lg:border-r lg:border-gray-200">
           {steps.map((step, stepIdx) => (

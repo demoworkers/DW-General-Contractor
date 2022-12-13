@@ -7,6 +7,7 @@ export default validateRoute(async (req, res, user) => {
   let { noteId, projectId } = req.body
 
   projectId = Number(projectId)
+  noteId = noteId ?? Number(noteId)
 
   try {
     if (!noteId) {
