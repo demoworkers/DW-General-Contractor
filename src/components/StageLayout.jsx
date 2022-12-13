@@ -10,11 +10,12 @@ import WorkScope from './WorkScope'
 import StageNotes from './StageNotes'
 import StagePhotos from './StagePhotos'
 import { Spinner } from './Spinner'
+import Contractors from './Contractors'
 
 const workScopeDB = []
 const stageNotesDB = ''
 
-const StageLayout = ({ projectId, stageId }) => {
+const StageLayout = ({ projectId, stageId, enabledSections = {} }) => {
   const [workScope, setWorkScope] = useState(workScopeDB)
   const [notes, setNotes] = useState(stageNotesDB)
   const [isSaving, setIsSaving] = useState(false)
@@ -73,14 +74,19 @@ const StageLayout = ({ projectId, stageId }) => {
 
   return (
     <div>
-      <WorkScope
-        nodes={workScope}
-        onNodeUpdate={handleScopeItemUpdate}
-        onNodeAdd={handleScopeItemAdd}
-        onNodeDelete={handleScopeItemDelete}
-      />
-      <StagePhotos />
-      <StageNotes notes={notes} setNotes={setNotes} />
+      {enabledSections.contractors && <Contractors />}
+      {enabledSections.workScope && (
+        <WorkScope
+          nodes={workScope}
+          onNodeUpdate={handleScopeItemUpdate}
+          onNodeAdd={handleScopeItemAdd}
+          onNodeDelete={handleScopeItemDelete}
+        />
+      )}
+      {enabledSections.photos && <StagePhotos />}
+      {enabledSections.notes && (
+        <StageNotes notes={notes} setNotes={setNotes} />
+      )}
 
       <footer className="flex justify-end pt-6 right-16 bottom-16">
         <button
@@ -92,7 +98,7 @@ const StageLayout = ({ projectId, stageId }) => {
             <Spinner />
           ) : (
             <>
-              <span>Next Stage</span>{' '}
+              <span>Next Stage</span>
               <ArrowRightIcon className="w-4 h-4 ml-1" />
             </>
           )}

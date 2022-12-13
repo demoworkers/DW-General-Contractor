@@ -133,3 +133,17 @@ li.p-treenode:hover .node-actions {
 .p-fileupload-choose .p-button-label {
   font-weight: 500 !important;
 }
+
+/* Multi Select */
+.p-multiselect {
+  min-width: 15rem;
+}
+
+.p-multiselect .p-multiselect-label {
+  padding: 0.5rem 0.5rem;
+}
+
+.p-multiselect-header,
+.p-multiselect-panel .p-multiselect-items .p-multiselect-item {
+  padding: 0.5rem 0.75rem !important;
+}

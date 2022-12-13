@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import { Tree } from 'primereact/tree'
 
-import 'primeicons/primeicons.css'
-import 'primereact/resources/themes/lara-light-indigo/theme.css'
 import {
   PencilSquareIcon,
   PlusCircleIcon,

@@ -11,6 +11,15 @@ import NotesLayout from '../../components/NotesLayout'
 import NavbarTabs from '../../components/NavbarTabs'
 import StatusPill from '../../components/StatusPill'
 
+const ENABLED_SECTIONS = {
+  BIDDING: {
+    contractors: true,
+    workScope: true,
+    photos: true,
+    notes: true,
+  },
+}
+
 const Project = ({ projectInfo }) => {
   console.log(projectInfo)
   const {
@@ -73,7 +82,11 @@ const Project = ({ projectInfo }) => {
       {!isNoteTabActive ? (
         <>
           <NavbarTabs currentStage={projectStage} />
-          <StageLayout projectId={id} stageId={stageId} />
+          <StageLayout
+            projectId={id}
+            stageId={stageId}
+            enabledSections={ENABLED_SECTIONS[projectStage]}
+          />
         </>
       ) : (
         <NotesLayout projectId={id} />
