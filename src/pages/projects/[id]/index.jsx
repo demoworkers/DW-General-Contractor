@@ -3,13 +3,14 @@ import { useRouter } from 'next/router'
 
 import { BookOpenIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
 
-import { prisma } from '../../../lib/prisma'
+import { prisma } from '../../../../lib/prisma'
+import fetcher from '../../../../lib/fetcher'
 
-import MainLayout from '../../components/MainLayout'
-import StageLayout from '../../components/StageLayout'
-import NotesLayout from '../../components/NotesLayout'
-import NavbarTabs from '../../components/NavbarTabs'
-import StatusPill from '../../components/StatusPill'
+import MainLayout from '../../../components/MainLayout'
+import StageLayout from '../../../components/StageLayout'
+import NotesLayout from '../../../components/NotesLayout'
+import NavbarTabs from '../../../components/NavbarTabs'
+import StatusPill from '../../../components/StatusPill'
 
 const ENABLED_SECTIONS = {
   BIDDING: {
@@ -20,25 +21,30 @@ const ENABLED_SECTIONS = {
   },
 }
 
-const Project = ({ projectInfo }) => {
-  console.log(projectInfo)
-  const {
-    name: projectName,
-    status: projectStatus,
-    stage: projectStage,
-  } = projectInfo
-
-  let stageId = null
-  if (projectInfo.projectDetails.length) {
-    stageId = projectInfo.projectDetails.filter(
-      (projectDetail) => projectDetail.stage === projectStage
-    )[0].id
-  }
-
+const Project = ({ projectInfoServerProps }) => {
   const router = useRouter()
   const { id } = router.query
 
+  const [projectInfo, setProjectInfo] = useState(projectInfoServerProps)
+  const [projectStatus, setProjectStatus] = useState(projectInfo?.status)
+  const [projectStage, setProjectStage] = useState(projectInfo?.stage)
   const [isNoteTabActive, setIsNoteTabActive] = useState(false)
+
+  const { name: projectName } = projectInfo
+
+  let stageId = null
+  if (projectInfo?.projectDetails?.length) {
+    // stageId = projectInfo.projectDetails.filter(
+    //   (projectDetail) => projectDetail.stage === projectStage
+    // )[0].id
+  }
+
+  console.log(projectInfo)
+
+  const handleNextStage = async () => {
+    const response = await fetcher('stage/next', { projectId: id })
+    console.log(response)
+  }
 
   return (
     <MainLayout>
@@ -81,11 +87,12 @@ const Project = ({ projectInfo }) => {
       </div>
       {!isNoteTabActive ? (
         <>
-          <NavbarTabs currentStage={projectStage} />
+          <NavbarTabs projectId={id} currentStage={projectStage} />
           <StageLayout
             projectId={id}
             stageId={stageId}
             enabledSections={ENABLED_SECTIONS[projectStage]}
+            onNextStage={handleNextStage}
           />
         </>
       ) : (
@@ -96,11 +103,16 @@ const Project = ({ projectInfo }) => {
 }
 
 export async function getServerSideProps(ctx) {
+  let { stage } = ctx.query
   let { id } = ctx.params
 
   id = Number(id)
 
   let projectInfo = {}
+
+  if (!stage) {
+    stage = 'BIDDING'
+  }
 
   try {
     const project = await prisma.Projects.findFirst({
@@ -110,6 +122,9 @@ export async function getServerSideProps(ctx) {
         status: true,
         stage: true,
         projectDetails: {
+          where: {
+            stage,
+          },
           select: {
             id: true,
             config: true,
@@ -127,7 +142,7 @@ export async function getServerSideProps(ctx) {
   }
 
   return {
-    props: { projectInfo },
+    props: { projectInfoServerProps: projectInfo },
   }
 }
 

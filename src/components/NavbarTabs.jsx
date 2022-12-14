@@ -1,31 +1,27 @@
 /* eslint-disable no-nested-ternary */
 import { CheckIcon } from '@heroicons/react/24/solid'
+import Link from 'next/link'
 
 let steps = [
   {
     name: 'Bidding',
     val: 'BIDDING',
-    href: '#',
   },
   {
     name: 'Material Selection',
     val: 'MATERIAL_SELECTION',
-    href: '#',
   },
   {
     name: 'Reconstruction',
     val: 'RECONSTRUCTION',
-    href: '#',
   },
   {
     name: 'Construction',
     val: 'CONSTRUCTION',
-    href: '#',
   },
   {
     name: 'Punch List',
     val: 'PUNCH_LIST',
-    href: '#',
   },
 ]
 
@@ -33,7 +29,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const NavbarTabs = ({ currentStage }) => {
+const NavbarTabs = ({ projectId, currentStage }) => {
   let isStageSet = false
   steps = steps.map((step) => {
     // Step is completed by default
@@ -51,10 +47,14 @@ const NavbarTabs = ({ currentStage }) => {
     return step
   })
 
+  const getLink = (link) => {
+    return `/projects/${projectId}?stage=${link}`
+  }
+
   const renderTabs = (tab, tabIdx) => {
     if (tab.status === 'complete') {
       return (
-        <a href={tab.href} className="group">
+        <Link href={getLink(tab.val)} className="group">
           <span
             className="absolute top-0 left-0 w-1 h-full bg-transparent group-hover:bg-gray-200 lg:bottom-0 lg:top-auto lg:h-1 lg:w-full"
             aria-hidden="true"
@@ -74,13 +74,13 @@ const NavbarTabs = ({ currentStage }) => {
               <span className="text-sm font-medium">{tab.name}</span>
             </span>
           </span>
-        </a>
+        </Link>
       )
     }
 
     if (tab.status === 'current') {
       return (
-        <a href={tab.href} aria-current="step">
+        <Link href={getLink(tab.val)} aria-current="step">
           <span
             className="absolute top-0 left-0 w-1 h-full bg-indigo-600 lg:bottom-0 lg:top-auto lg:h-1 lg:w-full"
             aria-hidden="true"
@@ -102,12 +102,12 @@ const NavbarTabs = ({ currentStage }) => {
               </span>
             </span>
           </span>
-        </a>
+        </Link>
       )
     }
 
     return (
-      <a href={tab.href} className="group">
+      <Link href={getLink(tab.val)} className="group">
         <span
           className="absolute top-0 left-0 w-1 h-full bg-transparent group-hover:bg-gray-200 lg:bottom-0 lg:top-auto lg:h-1 lg:w-full"
           aria-hidden="true"
@@ -129,7 +129,7 @@ const NavbarTabs = ({ currentStage }) => {
             </span>
           </span>
         </span>
-      </a>
+      </Link>
     )
   }
 

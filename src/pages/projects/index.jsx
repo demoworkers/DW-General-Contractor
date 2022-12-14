@@ -97,7 +97,7 @@ const Projects = ({ isAdmin }) => {
             <div className="flex items-center">
               <Link
                 className="font-medium text-indigo-700"
-                href={`/projects/${project.id}`}
+                href={`/projects/${project.id}?stage=${project.stage}`}
               >
                 {project.name}
               </Link>
