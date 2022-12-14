@@ -101,7 +101,7 @@ const StageLayout = ({ projectId, stageId, enabledSections = {} }) => {
         <button
           type="button"
           onClick={isSaving ? null : handleStageSave}
-          className="inline-flex items-center px-3 py-1 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none"
+          className="inline-flex items-center px-3 py-1 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-sm shadow-sm hover:bg-indigo-700 focus:outline-none"
         >
           {isSaving ? (
             <Spinner />

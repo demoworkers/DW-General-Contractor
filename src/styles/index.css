@@ -1,3 +1,7 @@
+:root {
+  --panel-border-color: rgb(229 231 235 / 1);
+  --panel-border-radius: 0.125rem;
+}
 .ck-content ol,
 .ck-content ul,
 .noteEntries ol,
@@ -74,7 +78,6 @@
 }
 
 /* Scope of Work - Sortable */
-
 .p-tree .p-tree-filter-container {
   position: relative;
   display: block;
@@ -119,11 +122,19 @@ li.p-treenode:hover .node-actions {
   padding-right: 0.75rem !important;
   background: rgb(79 70 229 / var(--tw-bg-opacity)) !important;
   cursor: pointer;
+  border-radius: var(--panel-border-radius);
 }
 
 .p-fileupload-buttonbar {
   justify-content: flex-end !important;
   padding-right: 0.5rem !important;
+  border-top-right-radius: var(--panel-border-radius) !important;
+  border-top-left-radius: var(--panel-border-radius) !important;
+}
+
+.p-fileupload .p-fileupload-content {
+  border-bottom-right-radius: var(--panel-border-radius) !important;
+  border-bottom-left-radius: var(--panel-border-radius) !important;
 }
 
 .p-fileupload-choose .p-button-icon {
@@ -137,6 +148,14 @@ li.p-treenode:hover .node-actions {
 /* Multi Select */
 .p-multiselect {
   min-width: 15rem;
+}
+.p-multiselect,
+.p-multiselect-panel {
+  border-radius: var(--panel-border-radius);
+}
+.p-multiselect-panel .p-multiselect-header {
+  border-top-right-radius: var(--panel-border-radius);
+  border-top-left-radius: var(--panel-border-radius);
 }
 
 .p-multiselect .p-multiselect-label {
@@ -201,4 +220,12 @@ input.p-inputnumber-input {
 .p-contextmenu .p-menuitem-icon.pi-trash,
 .p-contextmenu .p-menuitem-icon.pi-trash ~ .p-menuitem-text {
   color: red !important;
+}
+
+/* CK EDITOR */
+.ck-rounded-corners .ck.ck-editor__top .ck-sticky-panel .ck-toolbar,
+.ck-rounded-corners .ck.ck-editor__main > .ck-editor__editable,
+.ck.ck-editor__main > .ck-editor__editable.ck-rounded-corners {
+  border-color: var(--panel-border-color) !important;
+  border-radius: var(--panel-border-radius) !important;
 }

@@ -13,7 +13,7 @@ const Contractors = ({ selectedContractors, onContractorSelect }) => {
           Contractors
         </h3>
       </div>
-      <div className="p-4 bg-white border border-gray-200 rounded-md">
+      <div className="p-4 bg-white border border-gray-200 rounded-sm">
         <MultiSelect
           value={selectedContractors}
           options={contractors}
