@@ -242,7 +242,7 @@ const WorkScopeWithQuotes = ({
                             </td>
                             <td className="hidden px-3 py-4 text-sm text-right text-gray-500 sm:table-cell">
                               <InputNumber
-                                inputId="currency-us"
+                                inputId="decimal-qty"
                                 value={nestedItem.qty}
                                 onValueChange={(e) =>
                                   setItemValue(
@@ -252,12 +252,14 @@ const WorkScopeWithQuotes = ({
                                     'qty'
                                   )
                                 }
+                                mode="decimal"
                                 locale="en-US"
+                                minFractionDigits={2}
                               />
                             </td>
                             <td className="hidden px-3 py-4 text-sm text-right text-gray-500 sm:table-cell">
                               <InputNumber
-                                inputId="currency-us"
+                                inputId="currency-pricePerQty"
                                 value={nestedItem.pricePerQty}
                                 onValueChange={(e) =>
                                   setItemValue(
@@ -274,7 +276,7 @@ const WorkScopeWithQuotes = ({
                             </td>
                             <td className="py-4 pl-3 pr-4 text-sm text-right text-gray-500 itemAmount sm:pr-6 md:pr-4">
                               <InputNumber
-                                inputId="currency-us"
+                                inputId="currency-amount"
                                 value={nestedItem.qty * nestedItem.pricePerQty}
                                 onValueChange={(e) => {}}
                                 mode="currency"
