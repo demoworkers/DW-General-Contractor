@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { nanoid } from 'nanoid'
 
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
@@ -12,10 +12,12 @@ import StagePhotos from './StagePhotos'
 import { Spinner } from './Spinner'
 import Contractors from './Contractors'
 
+const contractorsDB = ''
 const workScopeDB = []
 const stageNotesDB = ''
 
 const StageLayout = ({ projectId, stageId, enabledSections = {} }) => {
+  const [contractors, setContractors] = useState(contractorsDB)
   const [workScope, setWorkScope] = useState(workScopeDB)
   const [notes, setNotes] = useState(stageNotesDB)
   const [isSaving, setIsSaving] = useState(false)
@@ -74,7 +76,12 @@ const StageLayout = ({ projectId, stageId, enabledSections = {} }) => {
 
   return (
     <div>
-      {enabledSections.contractors && <Contractors />}
+      {enabledSections.contractors && (
+        <Contractors
+          selectedContractors={contractors}
+          onContractorSelect={(val) => setContractors(val)}
+        />
+      )}
       {enabledSections.workScope && (
         <WorkScope
           nodes={workScope}

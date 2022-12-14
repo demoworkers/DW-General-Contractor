@@ -1,17 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { MultiSelect } from 'primereact/multiselect'
 import { Skeleton } from 'primereact/skeleton'
+import { useTeam } from 'lib/hooks'
 
-const Contractors = () => {
-  const [selectedCities, setSelectedCities] = useState(null)
+const Contractors = ({ selectedContractors, onContractorSelect }) => {
+  const { data: contractors, mutate: mutateAll, isLoading, isError } = useTeam()
 
-  const cities = [
-    { name: 'New York', code: 'NY' },
-    { name: 'Rome', code: 'RM' },
-    { name: 'London', code: 'LDN' },
-    { name: 'Istanbul', code: 'IST' },
-    { name: 'Paris', code: 'PRS' },
-  ]
   return (
     <>
       <div className="mt-6 mb-2 sm:flex sm:items-center sm:justify-between">
@@ -21,9 +15,9 @@ const Contractors = () => {
       </div>
       <div className="p-4 bg-white border rounded-md border-gray-3300">
         <MultiSelect
-          value={selectedCities}
-          options={cities}
-          onChange={(e) => setSelectedCities(e.value)}
+          value={selectedContractors}
+          options={contractors}
+          onChange={(e) => onContractorSelect(e.value)}
           optionLabel="name"
           placeholder="Select contractors"
           display="chip"
