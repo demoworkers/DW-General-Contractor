@@ -147,3 +147,58 @@ li.p-treenode:hover .node-actions {
 .p-multiselect-panel .p-multiselect-items .p-multiselect-item {
   padding: 0.5rem 0.75rem !important;
 }
+
+/* Input Number */
+input.p-inputnumber-input {
+  width: 120px;
+  border: none;
+  border-bottom: 1px solid;
+  border-radius: 0;
+  padding: 0.15rem;
+  text-align: right;
+}
+
+.itemAmount input.p-inputnumber-input,
+.itemSumAmount input.p-inputnumber-input {
+  border: 0;
+  color: #495057;
+  opacity: 1;
+}
+.itemSumAmount input.p-inputnumber-input {
+  font-weight: 600;
+}
+
+/* Inputs */
+.itemLabelMain input.p-inputtext,
+.itemLabel textarea.p-inputtextarea,
+.itemLabel input.p-inputtext {
+  border: none;
+  border-radius: 0;
+}
+
+.itemLabelMain input.p-inputtext {
+  width: 40%;
+  font-weight: 600;
+  padding: 0;
+}
+
+.itemLabelMain input.p-inputtext.p-inputtext:enabled:focus {
+  box-shadow: none;
+}
+
+.itemLabel textarea.p-inputtextarea {
+  width: 100%;
+  font-weight: 400;
+  height: fit-content !important;
+  padding: 0;
+}
+
+.itemLabel textarea.p-inputtextarea.p-inputtext:enabled:focus {
+  box-shadow: none;
+}
+
+/* Context Menu */
+.p-contextmenu .p-menuitem-icon.pi-trash,
+.p-contextmenu .p-menuitem-icon.pi-trash ~ .p-menuitem-text {
+  color: red !important;
+}

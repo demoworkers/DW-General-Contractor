@@ -11,6 +11,7 @@ import StageNotes from './StageNotes'
 import StagePhotos from './StagePhotos'
 import { Spinner } from './Spinner'
 import Contractors from './Contractors'
+import WorkScopeWithQuotes from './WorkScopeWithQuotes'
 
 const contractorsDB = ''
 const workScopeDB = []
@@ -82,14 +83,15 @@ const StageLayout = ({ projectId, stageId, enabledSections = {} }) => {
           onContractorSelect={(val) => setContractors(val)}
         />
       )}
-      {enabledSections.workScope && (
+      {/* {enabledSections.workScope && (
         <WorkScope
           nodes={workScope}
           onNodeUpdate={handleScopeItemUpdate}
           onNodeAdd={handleScopeItemAdd}
           onNodeDelete={handleScopeItemDelete}
         />
-      )}
+      )} */}
+      {enabledSections.workScope && <WorkScopeWithQuotes />}
       {enabledSections.photos && <StagePhotos />}
       {enabledSections.notes && (
         <StageNotes notes={notes} setNotes={setNotes} />
