@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { PlusIcon } from '@heroicons/react/24/outline'
 import { CalendarIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
@@ -22,6 +22,12 @@ const NotesLayout = ({ projectId }) => {
   const [selectedNote, setSelectedNote] = useState(null)
 
   const [isSliderOverOpen, setIsSliderOverOpen] = useState(false)
+
+  useEffect(() => {
+    if (!isSliderOverOpen) {
+      mutateAll()
+    }
+  }, [isSliderOverOpen])
 
   const openSlideover = () => {
     setIsSliderOverOpen(true)
