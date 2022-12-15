@@ -6,7 +6,7 @@ import { InputText } from 'primereact/inputtext'
 import { InputTextarea } from 'primereact/inputtextarea'
 import { InputNumber } from 'primereact/inputnumber'
 
-import { PlusIcon } from '@heroicons/react/24/outline'
+import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline'
 
 import { sumAmounts } from '../../utils/sumAmounts'
 
@@ -52,23 +52,21 @@ const WorkScopeWithQuotes = ({ items, setItems }) => {
     setItems(updatedItems)
   }
 
-  const handleItemDelete = () => {
+  const deleteItem = (itemIndex) => {
     let updatedItems = JSON.parse(JSON.stringify(items))
+
+    // filter out the deleted item
+    updatedItems = updatedItems.filter((item, itemIdx) => itemIdx !== itemIndex)
+
+    // set in state
+    setItems(updatedItems)
+  }
+
+  const handleItemDelete = () => {
+    const updatedItems = JSON.parse(JSON.stringify(items))
 
     // extract indexes
     const itemIndex = selectedItem[0]
-
-    // main item
-    if (!selectedItem[1]) {
-      updatedItems = updatedItems.filter(
-        (item, itemIdx) => itemIdx !== itemIndex
-      )
-      // set in state
-      setItems(updatedItems)
-      return
-    }
-
-    // extract indexes
     const nestedItemIndex = selectedItem[1]
 
     // filter/delete nested item
@@ -100,24 +98,27 @@ const WorkScopeWithQuotes = ({ items, setItems }) => {
       <div className="p-4 bg-white border border-gray-200 rounded-sm">
         {items.map((item, itemIdx) => (
           <div key={item.id} className="mb-8">
-            <h6
-              className="flex justify-between font-bold text-md itemLabelMain text-slate-900"
-              onContextMenu={(e) => {
-                setSelectedItem([itemIdx])
-                cm.current.show(e)
-              }}
-            >
+            <h6 className="flex justify-between font-bold text-md itemLabelMain text-slate-900">
               <InputText
                 value={item.label}
                 onChange={(e) => setItemValue(e.target.value, itemIdx)}
               />
-              <button
-                type="button"
-                onClick={() => addNewItem(itemIdx)}
-                className="inline-flex items-center px-2 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-sm shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              >
-                <PlusIcon className="w-4 h-4" />
-              </button>
+              <div className="flex">
+                <button
+                  type="button"
+                  onClick={() => deleteItem(itemIdx)}
+                  className="inline-flex items-center px-2 py-1 mr-4 text-sm font-medium text-red-600 bg-white border border-red-100 rounded-sm shadow-sm hover:border-red-300 hover:bg-red-50 focus:outline-none"
+                >
+                  <TrashIcon className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => addNewItem(itemIdx)}
+                  className="inline-flex items-center px-2 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-sm shadow-sm hover:bg-gray-50 focus:outline-none"
+                >
+                  <PlusIcon className="w-4 h-4" />
+                </button>
+              </div>
             </h6>
             <div className="flex flex-col mt-2">
               <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
