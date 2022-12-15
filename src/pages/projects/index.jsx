@@ -12,6 +12,7 @@ import LoadingTable from '../../components/LoadingTable'
 import ActionButton from '../../components/ActionButton'
 import ProjectSlideover from '../../components/ProjectSlideover'
 import Badge from '../../components/Badge'
+import StatusPill from '@/components/StatusPill'
 
 // import getServerSideProps from '../../lib/serverProps'
 
@@ -104,14 +105,16 @@ const Projects = ({ isAdmin }) => {
             </div>
           </td>
           <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
-            <span className="inline-flex px-2 text-xs font-semibold leading-5 text-gray-800 capitalize rounded-full bg-slate-100">
+            <span className="inline-flex px-2 text-xs font-semibold leading-5 text-gray-800 capitalize rounded-sm bg-slate-100">
               {titleCase(project.stage)}
             </span>
           </td>
           <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
-            <Badge type={project.status === 'OPEN' ? 'success' : 'danger'}>
-              {project.status.toLowerCase()}
-            </Badge>
+            <StatusPill
+              margin="none"
+              status={project.status === 'OPEN' ? 'success' : 'danger'}
+              label={project.status}
+            />
           </td>
           <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
             {project.createdOn}
@@ -166,7 +169,7 @@ const Projects = ({ isAdmin }) => {
         <div className="flex flex-col mt-8">
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-              <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+              <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-sm">
                 <table className="min-w-full divide-y divide-gray-300">
                   <thead className="bg-gray-50">
                     <tr>

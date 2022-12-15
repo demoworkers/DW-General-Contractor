@@ -58,7 +58,7 @@ const NotesLayout = ({ projectId }) => {
 
   const renderNotes = () => {
     return (
-      <div className="mb-4 bg-white shadow sm:rounded-md">
+      <div className="mb-4 bg-white shadow sm:rounded-sm">
         <ul className="divide-y divide-gray-200 1">
           {notes.length ? (
             notes.map((note) => (
@@ -131,7 +131,7 @@ const NotesLayout = ({ projectId }) => {
                     setIsNewNote(true)
                     openSlideover()
                   }}
-                  className="inline-flex items-center px-2 py-1 text-sm text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  className="inline-flex items-center px-2 py-1 text-sm text-white bg-indigo-600 border border-transparent rounded-sm shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
                   <PlusIcon className="w-4 h-4 mr-1" aria-hidden="true" />
                   New Note
@@ -155,7 +155,7 @@ const NotesLayout = ({ projectId }) => {
         <div className="flex mt-4 md:mt-0 md:ml-4">
           <button
             type="button"
-            className="inline-flex items-center px-2 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            className="inline-flex items-center px-2 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-sm shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             onClick={() => {
               setIsNewNote(true)
               openSlideover()

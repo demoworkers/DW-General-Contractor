@@ -69,11 +69,11 @@ const Team = ({ isAdmin }) => {
 
           <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
             {user.approved ? (
-              <span className="inline-flex px-2 text-xs font-semibold leading-5 text-green-800 capitalize bg-green-100 rounded-full">
+              <span className="inline-flex px-2 text-xs font-semibold leading-5 text-green-800 capitalize bg-green-100 rounded-sm">
                 Active
               </span>
             ) : (
-              <span className="inline-flex px-2 text-xs font-semibold leading-5 text-orange-800 bg-orange-100 rounded-full">
+              <span className="inline-flex px-2 text-xs font-semibold leading-5 text-orange-800 bg-orange-100 rounded-sm">
                 Inactive
               </span>
             )}
@@ -140,7 +140,7 @@ const Team = ({ isAdmin }) => {
         <div className="flex flex-col mt-8">
           <div className="-mx-4 -my-2 sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-              <div className="shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+              <div className="shadow ring-1 ring-black ring-opacity-5 md:rounded-sm">
                 <table className="min-w-full divide-y divide-gray-300">
                   <thead className="bg-gray-50">
                     <tr>

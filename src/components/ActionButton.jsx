@@ -16,7 +16,7 @@ const ActionButton = ({
   let title = ''
   let icon = ''
   let classes =
-    'inline-flex items-center px-3 py-2 mr-2 text-sm font-medium leading-4 text-white border border-gray-200 rounded-md shadow-sm text-slate-900 focus:outline-none focus:ring-1 focus:ring-offset-1'
+    'inline-flex items-center px-3 py-2 mr-2 text-sm font-medium leading-4 text-white border border-gray-200 rounded-sm shadow-sm text-slate-900 focus:outline-none focus:ring-1 focus:ring-offset-1'
 
   switch (type) {
     case 'activate':

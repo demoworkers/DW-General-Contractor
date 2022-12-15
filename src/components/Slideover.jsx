@@ -122,7 +122,7 @@ const Slideover = ({
                           <div className="flex items-center ml-3 h-7">
                             <button
                               type="button"
-                              className="text-indigo-200 bg-indigo-700 rounded-md hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+                              className="text-indigo-200 bg-indigo-700 rounded-sm hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
                               onClick={() => onClose(false)}
                             >
                               <span className="sr-only">Close panel</span>
@@ -151,7 +151,7 @@ const Slideover = ({
                                     name="noteName"
                                     id="noteName"
                                     {...register('noteName')}
-                                    className="block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                    className="block w-full border-gray-300 rounded-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                   />
                                 </div>
                               </div>
@@ -205,7 +205,7 @@ const Slideover = ({
                             </div>
                             <div className="relative flex justify-center">
                               <span className="px-2 text-sm text-gray-500 bg-white">
-                                Previous Notes
+                                Entries
                               </span>
                             </div>
                           </div>
@@ -230,14 +230,14 @@ const Slideover = ({
                     <div className="flex justify-end flex-shrink-0 px-4 py-4">
                       <button
                         type="button"
-                        className="px-2 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        className="px-2 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-sm shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                         onClick={() => onClose(false)}
                       >
                         Cancel
                       </button>
                       <button
                         type="submit"
-                        className="inline-flex justify-center px-2 py-1 ml-4 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        className="inline-flex justify-center px-2 py-1 ml-4 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-sm shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       >
                         Save
                       </button>
