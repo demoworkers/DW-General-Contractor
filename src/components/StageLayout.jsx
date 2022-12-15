@@ -25,19 +25,27 @@ const StageLayout = ({
   const [workScope, setWorkScope] = useState(workScopeDB)
   const [notes, setNotes] = useState(stageNotesDB)
   const [isSaving, setIsSaving] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+
+  const getStateValue = (response, type, defaultValue) => {
+    if (response && response.config) {
+      return response.config[type]
+    }
+    return defaultValue
+  }
 
   const setResponseState = (response) => {
-    if (response && response !== null && response.config) {
-      if (enabledSections.contractors) {
-        setContractors(response.config.contractors || '')
-      }
-      if (enabledSections.workScope) {
-        setWorkScope(response.config.workScope || [])
-      }
-      if (enabledSections.notes) {
-        setNotes(response.config.notes || '')
-      }
+    if (enabledSections.contractors) {
+      const contractorsValues = getStateValue(response, 'contractors', '')
+      setContractors(contractorsValues)
+    }
+    if (enabledSections.tableWithQuotes) {
+      const quotesTableValues = getStateValue(response, 'workScope', [])
+      setWorkScope(quotesTableValues)
+    }
+    if (enabledSections.notes) {
+      const notesValues = getStateValue(response, 'notes', [])
+      setNotes(notesValues)
     }
   }
 

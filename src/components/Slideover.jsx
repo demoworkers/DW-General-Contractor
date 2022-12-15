@@ -39,7 +39,7 @@ const Slideover = ({
   onClose,
   onSave,
 }) => {
-  const [imageFiles, setImageFiles] = useState([])
+  // const [imageFiles, setImageFiles] = useState([])
 
   const [loadingNoteEntries, setLoadingNoteEntries] = useState(false)
   const [noteEntries, setNoteEntries] = useState([])
@@ -50,9 +50,9 @@ const Slideover = ({
 
   const { CKEditor, ClassicEditor } = editorRef.current || {}
 
-  useEffect(() => {
-    console.log({ imageFiles })
-  }, [imageFiles])
+  // useEffect(() => {
+  //   console.log({ imageFiles })
+  // }, [imageFiles])
 
   useEffect(() => {
     async function fetchData() {
@@ -184,14 +184,14 @@ const Slideover = ({
                               <Spinner />
                             </div>
                           )}
-                          <FilePond
+                          {/* <FilePond
                             files={imageFiles}
                             setFiles={(fileItems) => {
                               setImageFiles(
                                 fileItems.map((fileItem) => fileItem.file)
                               )
                             }}
-                          />
+                          /> */}
                         </div>
                       </div>
                       {noteEntries.length > 0 && (
