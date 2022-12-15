@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { nanoid } from 'nanoid'
 
-import { ArrowRightIcon } from '@heroicons/react/24/outline'
+import { ArrowRightIcon, CheckIcon } from '@heroicons/react/24/outline'
 
 import fetcher from '../../lib/fetcher'
 
@@ -16,80 +16,6 @@ const contractorsDB = ''
 const stageNotesDB = ''
 const workScopeDB = []
 
-const workScopeDB1 = [
-  {
-    id: '0',
-    label: 'Bathroom Remodeling Labor',
-    children: [
-      {
-        id: '0-0',
-        label:
-          'General Conditions (job site protection, job site clean up, dumping fee from construction waste)',
-        qty: '1.00',
-        pricePerQty: '0',
-      },
-      {
-        id: '0-1',
-        label: 'Demolition and Debris removal of Kitchen Keep Walls intact',
-        qty: '1.00',
-        pricePerQty: '1000',
-      },
-      {
-        id: '0-2',
-        label: 'Demolition and Debris removal of kitchen - full gut',
-        qty: '1.00',
-        pricePerQty: '1200',
-      },
-    ],
-  },
-  {
-    id: '1',
-    label: 'Cabinets',
-    children: [
-      {
-        id: '1-0',
-        label:
-          "Cabinets - install of new kitchen cabinets per final project specifications - price doesn't include any framing or blocking",
-        qty: '14.00',
-        pricePerQty: '150',
-      },
-    ],
-  },
-  {
-    id: '2',
-    label: 'Plumbing - price includes rough material only',
-    children: [
-      {
-        id: '2-0',
-        label:
-          'Sink and Faucet - standard plumbing to install new sink, drain, and faucet',
-        qty: '1.00',
-        pricePerQty: '300',
-      },
-      {
-        id: '2-1',
-        label:
-          'Garbage Disposal - stanard plumbing to install new garbage disposal',
-        qty: '1.00',
-        pricePerQty: '150',
-      },
-      {
-        id: '2-2',
-        label:
-          'Add dishwasher - plumbing to add new dishwasher right next to sink - standard install included in price',
-        qty: '1.00',
-        pricePerQty: '500',
-      },
-      {
-        id: '2-3',
-        label: 'Appliances - standard plumbing to installl all appliances',
-        qty: '1.00',
-        pricePerQty: '350',
-      },
-    ],
-  },
-]
-
 const StageLayout = ({
   projectInfo: { id: projectId, stage: projectActiveStage },
   enabledSections = {},
@@ -101,6 +27,14 @@ const StageLayout = ({
   const [isSaving, setIsSaving] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
+  const setResponseState = (response) => {
+    if (response && response !== null && response.config) {
+      setContractors(response.config.contractors || '')
+      setWorkScope(response.config.workScope || [])
+      setNotes(response.config.notes || '')
+    }
+  }
+
   // load data here
   useEffect(() => {
     async function fetchStageData() {
@@ -111,32 +45,34 @@ const StageLayout = ({
         projectId,
         projectStage: projectActiveStage,
       })
-      console.log(response)
+
+      // set in state
+      setResponseState(response)
+
       // disable loading
       setIsLoading(false)
     }
     fetchStageData()
   }, [projectActiveStage])
 
-  console.log({ projectStage: projectActiveStage })
-
   const handleStageSave = async () => {
-    // setIsSaving(true)
-    // // upload photos
-    // // save here - attach photos
-    // const updatedConfig = await fetcher('stage/save', {
-    //   projectId,
-    //   stageId,
-    //   workScope,
-    //   notes,
-    // })
-    // // Update State
-    // setWorkScope(updatedConfig.workScope)
-    // setWorkScope(updatedConfig.notes)
-    // debugger
-    onNextStage()
-    // Stop Loading
+    setIsSaving(true)
+    // upload photos
+    // api request - attach photos
+    await fetcher('stage/save', {
+      projectId,
+      projectStage: projectActiveStage,
+      config: {
+        contractors,
+        workScope,
+        notes,
+      },
+    })
     setIsSaving(false)
+  }
+
+  const handleNextStage = () => {
+    onNextStage()
   }
 
   return isLoading ? (
@@ -157,10 +93,10 @@ const StageLayout = ({
         <StageNotes notes={notes} setNotes={setNotes} />
       )}
 
-      <footer className="flex justify-end pt-6 right-16 bottom-16">
+      <footer className="flex justify-between pt-6 right-16 bottom-16">
         <button
           type="button"
-          onClick={isSaving ? null : handleStageSave}
+          onClick={isSaving ? null : handleNextStage}
           className="inline-flex items-center px-3 py-1 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-sm shadow-sm hover:bg-indigo-700 focus:outline-none"
         >
           {isSaving ? (
@@ -168,7 +104,21 @@ const StageLayout = ({
           ) : (
             <>
               <span>Complete this Stage</span>
-              <ArrowRightIcon className="w-4 h-4 ml-1" />
+              {/* <ArrowRightIcon className="w-4 h-4 ml-1" /> */}
+            </>
+          )}
+        </button>
+        <button
+          type="button"
+          onClick={isSaving ? null : handleStageSave}
+          className="inline-flex items-center px-2 py-1 ml-3 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-sm shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        >
+          {isSaving ? (
+            <Spinner />
+          ) : (
+            <>
+              <CheckIcon className="w-4 h-4 mr-1" />
+              <span>Save</span>
             </>
           )}
         </button>

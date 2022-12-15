@@ -2,29 +2,57 @@ import { prisma } from '../../../../lib/prisma'
 import { validateRoute } from '../../../../lib/auth'
 
 export default validateRoute(async (req, res, user) => {
-  const { workScope, notes } = req.body
-  let { projectId, stageId } = req.body
+  const { projectStage, config } = req.body
+  let { projectId } = req.body
 
   projectId = Number(projectId)
-  stageId = Number(stageId)
 
-  const config = { workScope, notes }
-
-  let updatedConfig = {}
+  const projectDetails = {
+    // projectId,
+    config,
+    stage: projectStage,
+  }
 
   try {
-    updatedConfig = await prisma.ProjectDetails.upsert({
-      where: { id: stageId },
-      create: {
-        projectId,
-        config,
+    // get stage id - if exists
+    const projectInfo = await prisma.projects.findUnique({
+      where: {
+        id: projectId,
       },
-      update: {
-        config,
+      select: {
+        projectDetails: {
+          where: {
+            stage: projectStage,
+          },
+          select: {
+            id: true,
+          },
+        },
       },
     })
 
-    updatedConfig = updatedConfig.config
+    let stageId = 0
+
+    const previousDetails = projectInfo.projectDetails[0]
+    if (previousDetails) {
+      stageId = previousDetails.id
+    }
+
+    // update using projects model
+    await prisma.projects.update({
+      where: { id: projectId },
+      data: {
+        projectDetails: {
+          upsert: {
+            create: { ...projectDetails },
+            where: { id: stageId },
+            update: { config },
+          },
+        },
+      },
+    })
+
+    res.status(200).json({ message: 'success' })
   } catch (error) {
     res.status(500)
     res.json({
@@ -32,6 +60,4 @@ export default validateRoute(async (req, res, user) => {
       realError: error.message,
     })
   }
-
-  res.json(updatedConfig)
 })

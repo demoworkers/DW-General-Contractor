@@ -6,12 +6,12 @@ export default validateRoute(async (req, res, user) => {
 
   projectId = Number(projectId)
 
+  let stageInfo = {}
+
   try {
-    const stageInfo = await prisma.projects.findUnique({
+    stageInfo = await prisma.projects.findUnique({
       where: { id: projectId },
       select: {
-        status: true,
-        stage: true,
         projectDetails: {
           where: {
             stage: projectStage,
@@ -23,6 +23,10 @@ export default validateRoute(async (req, res, user) => {
         },
       },
     })
+
+    if (stageInfo && stageInfo.projectDetails[0]) {
+      stageInfo = stageInfo.projectDetails[0]
+    }
 
     res.status(200).json(stageInfo)
   } catch (error) {

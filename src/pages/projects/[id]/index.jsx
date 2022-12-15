@@ -32,18 +32,8 @@ const Project = ({ projectInfoServerProps }) => {
 
   const { name: projectName } = projectInfo
 
-  let stageId = null
-  if (projectInfo?.projectDetails?.length) {
-    // stageId = projectInfo.projectDetails.filter(
-    //   (projectDetail) => projectDetail.stage === projectStage
-    // )[0].id
-  }
-
-  console.log(projectInfo)
-
   const handleNextStage = async () => {
     const response = await fetcher('stage/next', { projectId: id })
-    console.log(response)
   }
 
   return (
@@ -75,13 +65,6 @@ const Project = ({ projectInfoServerProps }) => {
                 <XMarkIcon className="w-4 h-4 mr-1" /> Close Notes
               </>
             )}
-          </button>
-          <button
-            type="button"
-            className="inline-flex items-center px-2 py-1 ml-3 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-sm shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          >
-            <CheckIcon className="w-4 h-4 mr-1" />
-            Save
           </button>
         </div>
       </div>
