@@ -19,22 +19,32 @@ const workScopeDB = []
 const StageLayout = ({
   projectInfo: { id: projectId, stage: projectActiveStage },
   enabledSections = {},
-  onNextStage,
+  onStageComplete,
 }) => {
   const [contractors, setContractors] = useState(contractorsDB)
   const [workScope, setWorkScope] = useState(workScopeDB)
   const [notes, setNotes] = useState(stageNotesDB)
+  const [stageStatus, setStageStatus] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
   const getStateValue = (response, type, defaultValue) => {
-    if (response && response.config) {
-      return response.config[type]
+    if (response) {
+      if (type === 'status') {
+        return response[type]
+      }
+
+      if (response.config) {
+        return response.config[type]
+      }
     }
     return defaultValue
   }
 
   const setResponseState = (response) => {
+    const stageStatusValue = getStateValue(response, 'status', 'UNDER_PROGRESS')
+    setStageStatus(stageStatusValue)
+
     if (enabledSections.contractors) {
       const contractorsValues = getStateValue(response, 'contractors', '')
       setContractors(contractorsValues)
@@ -69,7 +79,7 @@ const StageLayout = ({
     fetchStageData()
   }, [projectActiveStage])
 
-  const handleStageSave = async () => {
+  const handleStageSave = async (isNext = false) => {
     setIsSaving(true)
     // upload photos
     // api request - attach photos
@@ -82,11 +92,16 @@ const StageLayout = ({
         notes,
       },
     })
-    setIsSaving(false)
+    if (!isNext) {
+      setIsSaving(false)
+    }
   }
 
-  const handleNextStage = () => {
-    onNextStage()
+  const handleCompleteStage = async () => {
+    await handleStageSave(true)
+    await onStageComplete()
+    // stop loading
+    setIsSaving(false)
   }
 
   return isLoading ? (
@@ -112,24 +127,26 @@ const StageLayout = ({
       )}
 
       <footer className="flex justify-between pt-6 right-16 bottom-16">
+        {stageStatus !== 'COMPLETED' && (
+          <button
+            type="button"
+            onClick={isSaving ? null : handleCompleteStage}
+            className="inline-flex items-center px-3 py-1 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-sm shadow-sm hover:bg-indigo-700 focus:outline-none"
+          >
+            {isSaving ? (
+              <Spinner />
+            ) : (
+              <>
+                <span>Complete this Stage</span>
+                {/* <ArrowRightIcon className="w-4 h-4 ml-1" /> */}
+              </>
+            )}
+          </button>
+        )}
         <button
           type="button"
-          onClick={isSaving ? null : handleNextStage}
-          className="inline-flex items-center px-3 py-1 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-sm shadow-sm hover:bg-indigo-700 focus:outline-none"
-        >
-          {isSaving ? (
-            <Spinner />
-          ) : (
-            <>
-              <span>Complete this Stage</span>
-              {/* <ArrowRightIcon className="w-4 h-4 ml-1" /> */}
-            </>
-          )}
-        </button>
-        <button
-          type="button"
-          onClick={isSaving ? null : handleStageSave}
-          className="inline-flex items-center px-2 py-1 ml-3 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-sm shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          onClick={isSaving ? null : () => handleStageSave(false)}
+          className="inline-flex items-center px-2 py-1 ml-auto text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-sm shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
         >
           {isSaving ? (
             <Spinner />

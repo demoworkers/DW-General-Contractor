@@ -39,8 +39,10 @@ const ENABLED_SECTIONS = {
   },
   PUNCH_LIST: {
     contractors: true,
+    tableWithQuotes: true,
     photos: true,
     notes: true,
+    sectionName: 'Materials',
   },
 }
 
@@ -55,8 +57,8 @@ const Project = ({ projectInfoServerProps }) => {
 
   const { name: projectName } = projectInfo
 
-  const handleNextStage = async () => {
-    const response = await fetcher('stage/next', { projectId: id })
+  const handleStageComplete = async () => {
+    await fetcher('stage/next', { projectId: id, projectStage: activeStage })
   }
 
   return (
@@ -99,9 +101,12 @@ const Project = ({ projectInfoServerProps }) => {
             activeStage={activeStage}
           />
           <StageLayout
-            projectInfo={{ id, stage: activeStage }}
+            projectInfo={{
+              id,
+              stage: activeStage,
+            }}
             enabledSections={ENABLED_SECTIONS[activeStage]}
-            onNextStage={handleNextStage}
+            onStageComplete={handleStageComplete}
           />
         </>
       ) : (

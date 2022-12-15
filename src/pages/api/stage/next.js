@@ -2,6 +2,7 @@ import { prisma } from '../../../../lib/prisma'
 import { validateRoute } from '../../../../lib/auth'
 
 export default validateRoute(async (req, res, user) => {
+  const { projectStage } = req.body
   let { projectId } = req.body
 
   projectId = Number(projectId)
@@ -13,6 +14,11 @@ export default validateRoute(async (req, res, user) => {
       },
       select: {
         stage: true,
+        projectDetails: {
+          where: {
+            stage: projectStage,
+          },
+        },
       },
     })
 
@@ -44,8 +50,17 @@ export default validateRoute(async (req, res, user) => {
       },
       data: {
         stage: nextStage,
+        projectDetails: {
+          upsert: {
+            create: { stage: projectStage, config: {} },
+            where: { id: project.projectDetails[0].id },
+            update: { status: 'COMPLETED' },
+          },
+        },
       },
     })
+
+    res.status(200).json({ message: 'success' })
   } catch (error) {
     res.status(500)
     res.json({
