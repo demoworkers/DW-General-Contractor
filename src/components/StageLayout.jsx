@@ -10,6 +10,7 @@ import StagePhotos from './StagePhotos'
 import { Spinner } from './Spinner'
 import Contractors from './Contractors'
 import WorkScopeWithQuotes from './WorkScopeWithQuotes'
+import { Ellipsis } from './Ellipsis'
 
 const contractorsDB = ''
 const stageNotesDB = ''
@@ -90,8 +91,7 @@ const workScopeDB1 = [
 ]
 
 const StageLayout = ({
-  projectId,
-  stageId,
+  projectInfo: { id: projectId, stage: projectActiveStage },
   enabledSections = {},
   onNextStage,
 }) => {
@@ -99,6 +99,26 @@ const StageLayout = ({
   const [workScope, setWorkScope] = useState(workScopeDB)
   const [notes, setNotes] = useState(stageNotesDB)
   const [isSaving, setIsSaving] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+
+  // load data here
+  useEffect(() => {
+    async function fetchStageData() {
+      // enable loading
+      setIsLoading(true)
+      // You can await here
+      const response = await fetcher('stage/load', {
+        projectId,
+        projectStage: projectActiveStage,
+      })
+      console.log(response)
+      // disable loading
+      setIsLoading(false)
+    }
+    fetchStageData()
+  }, [projectActiveStage])
+
+  console.log({ projectStage: projectActiveStage })
 
   const handleStageSave = async () => {
     // setIsSaving(true)
@@ -113,14 +133,16 @@ const StageLayout = ({
     // // Update State
     // setWorkScope(updatedConfig.workScope)
     // setWorkScope(updatedConfig.notes)
-    debugger
+    // debugger
     onNextStage()
     // Stop Loading
     setIsSaving(false)
   }
 
-  return (
-    <div>
+  return isLoading ? (
+    <Ellipsis />
+  ) : (
+    <>
       {enabledSections.contractors && (
         <Contractors
           selectedContractors={contractors}
@@ -145,13 +167,13 @@ const StageLayout = ({
             <Spinner />
           ) : (
             <>
-              <span>Next Stage</span>
+              <span>Complete this Stage</span>
               <ArrowRightIcon className="w-4 h-4 ml-1" />
             </>
           )}
         </button>
       </footer>
-    </div>
+    </>
   )
 }
 

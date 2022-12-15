@@ -53,10 +53,22 @@ const WorkScopeWithQuotes = ({ items, setItems }) => {
   }
 
   const handleItemDelete = () => {
-    const updatedItems = JSON.parse(JSON.stringify(items))
+    let updatedItems = JSON.parse(JSON.stringify(items))
 
     // extract indexes
     const itemIndex = selectedItem[0]
+
+    // main item
+    if (!selectedItem[1]) {
+      updatedItems = updatedItems.filter(
+        (item, itemIdx) => itemIdx !== itemIndex
+      )
+      // set in state
+      setItems(updatedItems)
+      return
+    }
+
+    // extract indexes
     const nestedItemIndex = selectedItem[1]
 
     // filter/delete nested item
@@ -88,7 +100,13 @@ const WorkScopeWithQuotes = ({ items, setItems }) => {
       <div className="p-4 bg-white border border-gray-200 rounded-sm">
         {items.map((item, itemIdx) => (
           <div key={item.id} className="mb-8">
-            <h6 className="flex justify-between font-bold text-md itemLabelMain text-slate-900">
+            <h6
+              className="flex justify-between font-bold text-md itemLabelMain text-slate-900"
+              onContextMenu={(e) => {
+                setSelectedItem([itemIdx])
+                cm.current.show(e)
+              }}
+            >
               <InputText
                 value={item.label}
                 onChange={(e) => setItemValue(e.target.value, itemIdx)}

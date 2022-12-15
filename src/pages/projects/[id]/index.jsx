@@ -23,7 +23,7 @@ const ENABLED_SECTIONS = {
 
 const Project = ({ projectInfoServerProps }) => {
   const router = useRouter()
-  const { id } = router.query
+  const { id, stage: activeStage } = router.query
 
   const [projectInfo, setProjectInfo] = useState(projectInfoServerProps)
   const [projectStatus, setProjectStatus] = useState(projectInfo?.status)
@@ -87,11 +87,14 @@ const Project = ({ projectInfoServerProps }) => {
       </div>
       {!isNoteTabActive ? (
         <>
-          <NavbarTabs projectId={id} currentStage={projectStage} />
-          <StageLayout
+          <NavbarTabs
             projectId={id}
-            stageId={stageId}
-            enabledSections={ENABLED_SECTIONS[projectStage]}
+            projectStage={projectStage}
+            activeStage={activeStage}
+          />
+          <StageLayout
+            projectInfo={{ id, stage: activeStage }}
+            enabledSections={ENABLED_SECTIONS[activeStage]}
             onNextStage={handleNextStage}
           />
         </>

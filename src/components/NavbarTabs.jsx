@@ -1,8 +1,11 @@
-/* eslint-disable no-nested-ternary */
-import { CheckIcon } from '@heroicons/react/24/solid'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
-let steps = [
+import { CheckIcon } from '@heroicons/react/24/solid'
+
+// import fetcher from '../../lib/fetcher'
+
+const DB_STEPS = [
   {
     name: 'Bidding',
     val: 'BIDDING',
@@ -29,23 +32,47 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const NavbarTabs = ({ projectId, currentStage }) => {
-  let isStageSet = false
-  steps = steps.map((step) => {
-    // Step is completed by default
-    step.status = 'complete'
+const NavbarTabs = ({ projectId, projectStage, activeStage }) => {
+  const [stages, setStages] = useState(DB_STEPS)
+  const [isLoading, setIsLoading] = useState(false)
 
-    if (isStageSet) {
+  // set active stage - based on props
+  const setActiveStage = () => {
+    let updatedStages = JSON.parse(JSON.stringify(stages))
+
+    updatedStages = updatedStages.map((step) => {
+      // upcoming by default
       step.status = 'upcoming'
-    }
+      if (step.val === activeStage) {
+        step.status = 'current'
+      }
+      return step
+    })
 
-    if (step.val === currentStage) {
-      step.status = 'current'
-      isStageSet = true
-    }
+    // set in state
+    setStages(updatedStages)
+  }
 
-    return step
-  })
+  // set active stage - based on props
+  useEffect(() => {
+    setActiveStage()
+  }, [activeStage])
+
+  // useEffect(() => {
+  //   async function fetchCompletedStagesData() {
+  //     // enable loading
+  //     setIsLoading(true)
+  //     // You can await here
+  //     const response = await fetcher('stage/listCompleted', {
+  //       projectId,
+  //     })
+  //     console.log(response)
+
+  //     // disable loading
+  //     setIsLoading(false)
+  //   }
+  //   fetchCompletedStagesData()
+  // }, [projectStage])
 
   const getLink = (link) => {
     return `/projects/${projectId}?stage=${link}`
@@ -137,12 +164,14 @@ const NavbarTabs = ({ projectId, currentStage }) => {
     <div className="mt-8 bg-white rounded-md lg:border-t lg:border-b lg:border-gray-200">
       <nav className="mx-auto max-w-7xl " aria-label="Progress">
         <ol className="overflow-hidden rounded-md lg:flex lg:rounded-none lg:border-l lg:border-r lg:border-gray-200">
-          {steps.map((step, stepIdx) => (
+          {stages.map((step, stepIdx) => (
             <li key={step.val} className="relative overflow-hidden lg:flex-1">
               <div
                 className={classNames(
                   stepIdx === 0 ? 'rounded-t-md border-b-0' : '',
-                  stepIdx === steps.length - 1 ? 'rounded-b-md border-t-0' : '',
+                  stepIdx === stages.length - 1
+                    ? 'rounded-b-md border-t-0'
+                    : '',
                   'overflow-hidden border border-gray-200 lg:border-0'
                 )}
               >

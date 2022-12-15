@@ -56,6 +56,7 @@ model ProjectDetails {
   id        Int          @id @default(autoincrement())
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
+  status    StageStatus  @default(UNDER_PROGRESS)
   stage     ProjectStage @default(BIDDING)
   config    Json
   Projects  Projects?    @relation(fields: [projectId], references: [id])
@@ -104,4 +105,9 @@ enum ProjectStage {
   RECONSTRUCTION
   CONSTRUCTION
   PUNCH_LIST
+}
+
+enum StageStatus {
+  COMPLETED
+  UNDER_PROGRESS
 }
