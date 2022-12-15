@@ -15,7 +15,30 @@ import StatusPill from '../../../components/StatusPill'
 const ENABLED_SECTIONS = {
   BIDDING: {
     contractors: true,
-    workScope: true,
+    tableWithQuotes: true,
+    photos: true,
+    notes: true,
+    sectionName: 'Scope of Work',
+  },
+  MATERIAL_SELECTION: {
+    contractors: true,
+    tableWithQuotes: true,
+    photos: true,
+    notes: true,
+    sectionName: 'Materials',
+  },
+  RECONSTRUCTION: {
+    contractors: true,
+    photos: true,
+    notes: true,
+  },
+  CONSTRUCTION: {
+    contractors: true,
+    photos: true,
+    notes: true,
+  },
+  PUNCH_LIST: {
+    contractors: true,
     photos: true,
     notes: true,
   },

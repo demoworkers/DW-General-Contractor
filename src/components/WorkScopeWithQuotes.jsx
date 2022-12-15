@@ -10,7 +10,7 @@ import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline'
 
 import { sumAmounts } from '../../utils/sumAmounts'
 
-const WorkScopeWithQuotes = ({ items, setItems }) => {
+const TableWithQuotes = ({ sectionName, items, setItems }) => {
   const cm = useRef(null)
   const [selectedItem, setSelectedItem] = useState([])
 
@@ -90,7 +90,7 @@ const WorkScopeWithQuotes = ({ items, setItems }) => {
     <>
       <div className="mt-6 mb-2 sm:flex sm:items-center sm:justify-between">
         <h3 className="font-medium leading-6 text-gray-900 text-md">
-          Scope of Work
+          {sectionName}
         </h3>
       </div>
       <ContextMenu model={CONTEXT_MENU_ITEMS} ref={cm} />
@@ -288,4 +288,4 @@ const WorkScopeWithQuotes = ({ items, setItems }) => {
   )
 }
 
-export default WorkScopeWithQuotes
+export default TableWithQuotes

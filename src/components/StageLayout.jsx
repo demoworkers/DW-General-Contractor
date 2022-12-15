@@ -9,7 +9,7 @@ import StageNotes from './StageNotes'
 import StagePhotos from './StagePhotos'
 import { Spinner } from './Spinner'
 import Contractors from './Contractors'
-import WorkScopeWithQuotes from './WorkScopeWithQuotes'
+import TableWithQuotes from './WorkScopeWithQuotes'
 import { Ellipsis } from './Ellipsis'
 
 const contractorsDB = ''
@@ -29,9 +29,15 @@ const StageLayout = ({
 
   const setResponseState = (response) => {
     if (response && response !== null && response.config) {
-      setContractors(response.config.contractors || '')
-      setWorkScope(response.config.workScope || [])
-      setNotes(response.config.notes || '')
+      if (enabledSections.contractors) {
+        setContractors(response.config.contractors || '')
+      }
+      if (enabledSections.workScope) {
+        setWorkScope(response.config.workScope || [])
+      }
+      if (enabledSections.notes) {
+        setNotes(response.config.notes || '')
+      }
     }
   }
 
@@ -85,8 +91,12 @@ const StageLayout = ({
           onContractorSelect={(val) => setContractors(val)}
         />
       )}
-      {enabledSections.workScope && (
-        <WorkScopeWithQuotes items={workScope} setItems={setWorkScope} />
+      {enabledSections.tableWithQuotes && (
+        <TableWithQuotes
+          sectionName={enabledSections.sectionName}
+          items={workScope}
+          setItems={setWorkScope}
+        />
       )}
       {enabledSections.photos && <StagePhotos />}
       {enabledSections.notes && (
