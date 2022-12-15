@@ -100,28 +100,30 @@ const ProjectSlideover = ({
                               </div>
                             </div>
                           </div>
-                          {/* <div className="pt-6 pb-5">
-                            <fieldset>
-                              <legend className="text-sm font-medium text-gray-900">
-                                Status
-                              </legend>
-                              <RadioButton
-                                id="status-open"
-                                value="OPEN"
-                                {...register('status')}
-                              >
-                                Open
-                              </RadioButton>
-                              <RadioButton
-                                id="status-closed"
-                                value="CLOSED"
-                                {...register('status')}
-                              >
-                                Closed
-                              </RadioButton>
-                            </fieldset>
-                          </div>
-                          <div className="pt-6 pb-5">
+                          {!isNew && (
+                            <div className="pt-6 pb-5">
+                              <fieldset>
+                                <legend className="text-sm font-medium text-gray-900">
+                                  Status
+                                </legend>
+                                <RadioButton
+                                  id="status-open"
+                                  value="OPEN"
+                                  {...register('status')}
+                                >
+                                  Open
+                                </RadioButton>
+                                <RadioButton
+                                  id="status-closed"
+                                  value="CLOSED"
+                                  {...register('status')}
+                                >
+                                  Closed
+                                </RadioButton>
+                              </fieldset>
+                            </div>
+                          )}
+                          {/*  <div className="pt-6 pb-5">
                             <fieldset>
                               <legend className="text-sm font-medium text-gray-900">
                                 State
@@ -162,7 +164,7 @@ const ProjectSlideover = ({
                                 Punch List
                               </RadioButton>
                             </fieldset>
-                          </div> */}
+                          </div>*/}
                         </div>
                       </div>
                     </div>
