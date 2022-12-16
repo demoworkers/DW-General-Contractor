@@ -1,9 +1,11 @@
 import { prisma } from '../../lib/prisma'
 import MainLayout from '../components/MainLayout'
 
-const Dashboard = ({ stats }) => {
+import serverProps from '../../lib/serverProps'
+
+const Dashboard = ({ userRole, stats }) => {
   return (
-    <MainLayout>
+    <MainLayout userRole={userRole}>
       <div>
         <h3 className="text-lg font-medium leading-6 text-gray-900">Stats</h3>
         <dl className="grid grid-cols-1 gap-5 mt-5 sm:grid-cols-3">
@@ -26,7 +28,7 @@ const Dashboard = ({ stats }) => {
   )
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(ctx) {
   const stats = []
 
   try {
@@ -48,8 +50,11 @@ export async function getServerSideProps() {
   }
 
   return {
-    props: {
-      stats,
+    ...(await serverProps(ctx)),
+    ...{
+      props: {
+        stats,
+      },
     },
   }
 }

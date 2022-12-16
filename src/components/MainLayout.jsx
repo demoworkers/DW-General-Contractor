@@ -42,7 +42,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const MainLayout = ({ isAdmin, children }) => {
+const MainLayout = ({ userRole, children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const router = useRouter()
@@ -50,9 +50,13 @@ const MainLayout = ({ isAdmin, children }) => {
 
   navigation = navigation
     .map((navItem) => {
-      // if (!isAdmin && navItem.forAdmin) {
-      //   return null
-      // }
+      if (
+        userRole &&
+        (!userRole.isAdmin || userRole.isManager) &&
+        navItem.forAdmin
+      ) {
+        return null
+      }
 
       let firstDir = path.split('/')[1]
       firstDir = `/${firstDir}`

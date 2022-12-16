@@ -11,12 +11,11 @@ import MainLayout from '../../components/MainLayout'
 import LoadingTable from '../../components/LoadingTable'
 import ActionButton from '../../components/ActionButton'
 import ProjectSlideover from '../../components/ProjectSlideover'
-import Badge from '../../components/Badge'
-import StatusPill from '@/components/StatusPill'
+import StatusPill from '../../components/StatusPill'
 
-// import getServerSideProps from '../../lib/serverProps'
+import getServerSideProps from '../../../lib/serverProps'
 
-const Projects = ({ isAdmin }) => {
+const Projects = ({ userRole }) => {
   const [isNew, setIsNew] = useState(false)
   const [selectedProject, setSelectedProject] = useState(null)
   const [isSliderOverOpen, setIsSliderOverOpen] = useState(false)
@@ -120,14 +119,18 @@ const Projects = ({ isAdmin }) => {
             {project.createdOn}
           </td>
           <td className="relative py-4 pl-3 pr-4 text-sm font-medium text-right whitespace-nowrap sm:pr-6">
-            <ActionButton
-              type="edit"
-              onClick={() => handleAction('edit', project)}
-            />
-            <ActionButton
-              type="delete"
-              onClick={() => handleAction('delete', project)}
-            />
+            {(userRole.isAdmin || userRole.isManager) && (
+              <>
+                <ActionButton
+                  type="edit"
+                  onClick={() => handleAction('edit', project)}
+                />
+                <ActionButton
+                  type="delete"
+                  onClick={() => handleAction('delete', project)}
+                />
+              </>
+            )}
           </td>
         </tr>
       ))
@@ -147,7 +150,7 @@ const Projects = ({ isAdmin }) => {
   }
 
   return (
-    <MainLayout isAdmin={isAdmin}>
+    <MainLayout userRole={userRole}>
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
@@ -157,14 +160,16 @@ const Projects = ({ isAdmin }) => {
               and created date
             </p>
           </div>
-          <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-            <ActionButton
-              type="new"
-              onClick={() => handleAction('new', undefined)}
-            >
-              Add Project
-            </ActionButton>
-          </div>
+          {(userRole.isAdmin || userRole.isManager) && (
+            <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+              <ActionButton
+                type="new"
+                onClick={() => handleAction('new', undefined)}
+              >
+                Add Project
+              </ActionButton>
+            </div>
+          )}
         </div>
         <div className="flex flex-col mt-8">
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -234,6 +239,6 @@ const Projects = ({ isAdmin }) => {
   )
 }
 
-// export { getServerSideProps }
+export { getServerSideProps }
 
 export default Projects

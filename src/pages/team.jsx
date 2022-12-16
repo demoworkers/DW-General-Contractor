@@ -12,7 +12,7 @@ import Dropdown from '../components/Dropdown'
 
 import getServerSideProps from '../../lib/serverProps'
 
-const Team = ({ isAdmin }) => {
+const Team = ({ userRole }) => {
   const { mutate } = useSWRConfig()
 
   const { data: users, mutate: mutateAll, isLoading, isError } = useTeam()
@@ -45,6 +45,8 @@ const Team = ({ isAdmin }) => {
       userId,
       role,
     })
+
+    mutateAll()
 
     if (userUpdate.error) {
       console.error(userUpdate.error)
@@ -79,7 +81,7 @@ const Team = ({ isAdmin }) => {
             )}
           </td>
           <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
-            {isAdmin ? (
+            {userRole.isAdmin || userRole.isManager ? (
               <Dropdown
                 selected={user.role}
                 list={['Admin', 'Manager', 'Designer', 'Trades', 'User']}
@@ -90,21 +92,25 @@ const Team = ({ isAdmin }) => {
             )}
           </td>
           <td className="relative py-4 pl-3 pr-4 text-sm font-medium text-right whitespace-nowrap sm:pr-6">
-            {user.approved ? (
-              <ActionButton
-                type="deactivate"
-                onClick={() => handleAction('deactivate', user.id)}
-              />
-            ) : (
-              <ActionButton
-                type="activate"
-                onClick={() => handleAction('activate', user.id)}
-              />
+            {(userRole.isAdmin || userRole.isManager) && (
+              <>
+                {user.approved ? (
+                  <ActionButton
+                    type="deactivate"
+                    onClick={() => handleAction('deactivate', user.id)}
+                  />
+                ) : (
+                  <ActionButton
+                    type="activate"
+                    onClick={() => handleAction('activate', user.id)}
+                  />
+                )}
+                <ActionButton
+                  type="delete"
+                  onClick={() => handleAction('delete', user.id)}
+                />
+              </>
             )}
-            <ActionButton
-              type="delete"
-              onClick={() => handleAction('delete', user.id)}
-            />
           </td>
         </tr>
       ))
@@ -124,7 +130,7 @@ const Team = ({ isAdmin }) => {
   }
 
   return (
-    <MainLayout isAdmin={isAdmin}>
+    <MainLayout userRole={userRole}>
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
