@@ -105,6 +105,7 @@ enum ProjectStage {
   RECONSTRUCTION
   CONSTRUCTION
   PUNCH_LIST
+  COMPLETED
 }
 
 enum StageStatus {

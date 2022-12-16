@@ -115,6 +115,7 @@ li.p-treenode:hover .node-actions {
   display: flex;
 }
 
+[aria-label='Upload'],
 .p-fileupload-choose {
   padding-top: 0.25rem !important;
   padding-bottom: 0.25rem !important;

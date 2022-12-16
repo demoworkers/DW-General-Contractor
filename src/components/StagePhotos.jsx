@@ -12,6 +12,21 @@ const StagePhotos = () => {
   const toast = useRef(null)
   const fileUploadRef = useRef(null)
 
+  const onTemplateUpload = (e) => {
+    // eslint-disable-next-line no-underscore-dangle
+    let _totalSize = 0
+    e.files.forEach((file) => {
+      _totalSize += file.size || 0
+    })
+
+    setTotalSize(_totalSize)
+    toast.current.show({
+      severity: 'info',
+      summary: 'Success',
+      detail: 'File Uploaded',
+    })
+  }
+
   const headerTemplate = (options) => {
     const { className, chooseButton, uploadButton, cancelButton } = options
     const value = totalSize / 10000
@@ -30,8 +45,8 @@ const StagePhotos = () => {
         }}
       >
         {chooseButton}
-        {/* {uploadButton}
-        {cancelButton} */}
+        {uploadButton}
+        {/* {cancelButton} */}
         {/* <ProgressBar
           value={value}
           displayValueTemplate={() => `${formatedValue} / 1 MB`}
@@ -76,11 +91,11 @@ const StagePhotos = () => {
       <FileUpload
         ref={fileUploadRef}
         name="files[]"
-        url="http://localhost:3000/api/uploadFile"
+        url="http://localhost:3000/api/upload"
         multiple
         accept="image/*"
-        maxFileSize={1000000}
-        // onUpload={onTemplateUpload}
+        // maxFileSize={1000000}
+        onUpload={onTemplateUpload}
         // onSelect={onTemplateSelect}
         // onError={onTemplateClear}
         // onClear={onTemplateClear}

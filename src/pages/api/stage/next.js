@@ -39,6 +39,10 @@ export default validateRoute(async (req, res, user) => {
         nextStage = 'PUNCH_LIST'
         break
 
+      case 'PUNCH_LIST':
+        nextStage = 'COMPLETED'
+        break
+
       default:
         nextStage = 'BIDDING'
         break

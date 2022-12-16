@@ -6,15 +6,16 @@ import { ArrowRightIcon, CheckIcon } from '@heroicons/react/24/outline'
 import fetcher from '../../lib/fetcher'
 
 import StageNotes from './StageNotes'
-import StagePhotos from './StagePhotos'
 import { Spinner } from './Spinner'
 import Contractors from './Contractors'
-import TableWithQuotes from './WorkScopeWithQuotes'
+import TableWithQuotes from './TableWithQuotes'
 import { Ellipsis } from './Ellipsis'
+import ImageUpload from './ImageUpload'
 
 const contractorsDB = ''
 const stageNotesDB = ''
 const workScopeDB = []
+const photosDB = []
 
 const StageLayout = ({
   projectInfo: { id: projectId, stage: projectActiveStage },
@@ -24,6 +25,7 @@ const StageLayout = ({
   const [contractors, setContractors] = useState(contractorsDB)
   const [workScope, setWorkScope] = useState(workScopeDB)
   const [notes, setNotes] = useState(stageNotesDB)
+  const [photos, setPhotos] = useState(photosDB)
   const [stageStatus, setStageStatus] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
@@ -52,6 +54,10 @@ const StageLayout = ({
     if (enabledSections.tableWithQuotes) {
       const quotesTableValues = getStateValue(response, 'workScope', [])
       setWorkScope(quotesTableValues)
+    }
+    if (enabledSections.photos) {
+      const photosValues = getStateValue(response, 'photos', [])
+      setPhotos(photosValues)
     }
     if (enabledSections.notes) {
       const notesValues = getStateValue(response, 'notes', [])
@@ -89,6 +95,7 @@ const StageLayout = ({
       config: {
         contractors,
         workScope,
+        photos,
         notes,
       },
     })
@@ -121,7 +128,9 @@ const StageLayout = ({
           setItems={setWorkScope}
         />
       )}
-      {enabledSections.photos && <StagePhotos />}
+      {enabledSections.photos && (
+        <ImageUpload images={photos} onImagesUpdate={setPhotos} />
+      )}
       {enabledSections.notes && (
         <StageNotes notes={notes} setNotes={setNotes} />
       )}

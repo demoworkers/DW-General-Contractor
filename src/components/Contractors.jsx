@@ -14,14 +14,16 @@ const Contractors = ({ selectedContractors, onContractorSelect }) => {
         </h3>
       </div>
       <div className="p-4 bg-white border border-gray-200 rounded-sm">
-        <MultiSelect
-          value={selectedContractors}
-          options={contractors}
-          onChange={(e) => onContractorSelect(e.value)}
-          optionLabel="name"
-          placeholder="Select contractors"
-          display="chip"
-        />
+        {!isLoading && (
+          <MultiSelect
+            value={selectedContractors}
+            options={contractors}
+            onChange={(e) => onContractorSelect(e.value)}
+            optionLabel="name"
+            placeholder="Select contractors"
+            display="chip"
+          />
+        )}
       </div>
     </>
   )
