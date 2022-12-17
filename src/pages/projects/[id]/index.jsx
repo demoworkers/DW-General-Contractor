@@ -5,6 +5,7 @@ import { BookOpenIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
 
 import { prisma } from '../../../../lib/prisma'
 import fetcher from '../../../../lib/fetcher'
+import serverProps from '../../../../lib/serverProps'
 
 import MainLayout from '../../../components/MainLayout'
 import StageLayout from '../../../components/StageLayout'
@@ -50,7 +51,7 @@ const ENABLED_SECTIONS = {
   },
 }
 
-const Project = ({ projectInfoServerProps }) => {
+const Project = ({ userRole, projectInfoServerProps }) => {
   const router = useRouter()
   const { id, stage: activeStage } = router.query
 
@@ -78,24 +79,26 @@ const Project = ({ projectInfoServerProps }) => {
             />
           </h2>
         </div>
-        <div className="flex mt-4 md:mt-0 md:ml-4">
-          <button
-            type="button"
-            onClick={() => setIsNoteTabActive(!isNoteTabActive)}
-            className="inline-flex items-center px-2 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-sm shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          >
-            {!isNoteTabActive ? (
-              <>
-                <BookOpenIcon className="w-4 h-4 mr-1" />
-                View Notes
-              </>
-            ) : (
-              <>
-                <XMarkIcon className="w-4 h-4 mr-1" /> Close Notes
-              </>
-            )}
-          </button>
-        </div>
+        {(userRole.isAdmin || userRole.isManager) && (
+          <div className="flex mt-4 md:mt-0 md:ml-4">
+            <button
+              type="button"
+              onClick={() => setIsNoteTabActive(!isNoteTabActive)}
+              className="inline-flex items-center px-2 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-sm shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              {!isNoteTabActive ? (
+                <>
+                  <BookOpenIcon className="w-4 h-4 mr-1" />
+                  View Notes
+                </>
+              ) : (
+                <>
+                  <XMarkIcon className="w-4 h-4 mr-1" /> Close Notes
+                </>
+              )}
+            </button>
+          </div>
+        )}
       </div>
       {!isNoteTabActive ? (
         <>
@@ -105,6 +108,7 @@ const Project = ({ projectInfoServerProps }) => {
             activeStage={activeStage}
           />
           <StageLayout
+            userRole={userRole}
             projectInfo={{
               id,
               stage: activeStage,
@@ -121,6 +125,8 @@ const Project = ({ projectInfoServerProps }) => {
 }
 
 export async function getServerSideProps(ctx) {
+  const globalProps = await serverProps(ctx)
+
   let { stage } = ctx.query
   let { id } = ctx.params
 
@@ -160,7 +166,7 @@ export async function getServerSideProps(ctx) {
   }
 
   return {
-    props: { projectInfoServerProps: projectInfo },
+    props: { ...globalProps.props, projectInfoServerProps: projectInfo },
   }
 }
 

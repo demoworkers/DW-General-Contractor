@@ -14,6 +14,7 @@ import ImageUpload from './ImageUpload'
 import DateSelect from './DateSelect'
 
 const StageLayout = ({
+  userRole,
   projectInfo: { id: projectId, stage: projectActiveStage },
   enabledSections = {},
   onStageComplete,
@@ -163,14 +164,16 @@ const StageLayout = ({
       <Ellipsis />
     ) : (
       <>
-        {enabledSections.contractors && (
-          <Contractors
-            selectedContractors={contractors}
-            onContractorSelect={(val) => setContractors(val)}
-          />
-        )}
+        {(userRole.isAdmin || userRole.isManager) &&
+          enabledSections.contractors && (
+            <Contractors
+              selectedContractors={contractors}
+              onContractorSelect={(val) => setContractors(val)}
+            />
+          )}
         {enabledSections.tableWithQuotes && (
           <TableWithQuotes
+            userRole={userRole}
             sectionName={enabledSections.sectionName}
             items={workScope}
             setItems={setWorkScope}
@@ -178,6 +181,7 @@ const StageLayout = ({
         )}
         {enabledSections.photos && (
           <ImageUpload
+            userRole={userRole}
             buttonId="photos"
             images={photos}
             onImagesUpdate={setPhotos}
@@ -185,17 +189,19 @@ const StageLayout = ({
         )}
         {enabledSections.dateSelect && (
           <DateSelect
+            userRole={userRole}
             sectionLabel={enabledSections.dateSelectLabel}
             date={dateSelect}
             onDateUpdate={setDateSelect}
           />
         )}
         {enabledSections.notes && (
-          <StageNotes notes={notes} setNotes={setNotes} />
+          <StageNotes userRole={userRole} notes={notes} setNotes={setNotes} />
         )}
 
         {enabledSections.colorDrawings && (
           <ImageUpload
+            userRole={userRole}
             buttonId="colorDrawings"
             sectionLabel={enabledSections.colorDrawingsLabel}
             images={colorDrawings}
@@ -203,31 +209,33 @@ const StageLayout = ({
           />
         )}
 
-        <footer className="flex justify-between pt-6 right-16 bottom-16">
-          {stageStatus !== 'COMPLETED' && (
+        {!userRole.isUser && (
+          <footer className="flex justify-between pt-6 right-16 bottom-16">
+            {stageStatus !== 'COMPLETED' && (
+              <button
+                type="button"
+                onClick={isSaving ? null : handleCompleteStage}
+                className="inline-flex items-center px-3 py-1 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-sm shadow-sm hover:bg-indigo-700 focus:outline-none"
+              >
+                {isSaving ? <Spinner /> : <span>Complete this Stage</span>}
+              </button>
+            )}
             <button
               type="button"
-              onClick={isSaving ? null : handleCompleteStage}
-              className="inline-flex items-center px-3 py-1 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-sm shadow-sm hover:bg-indigo-700 focus:outline-none"
+              onClick={isSaving ? null : () => handleStageSave(false)}
+              className="inline-flex items-center px-2 py-1 ml-auto text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-sm shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >
-              {isSaving ? <Spinner /> : <span>Complete this Stage</span>}
+              {isSaving ? (
+                <Spinner />
+              ) : (
+                <>
+                  <CheckIcon className="w-4 h-4 mr-1" />
+                  <span>Save</span>
+                </>
+              )}
             </button>
-          )}
-          <button
-            type="button"
-            onClick={isSaving ? null : () => handleStageSave(false)}
-            className="inline-flex items-center px-2 py-1 ml-auto text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-sm shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          >
-            {isSaving ? (
-              <Spinner />
-            ) : (
-              <>
-                <CheckIcon className="w-4 h-4 mr-1" />
-                <span>Save</span>
-              </>
-            )}
-          </button>
-        </footer>
+          </footer>
+        )}
       </>
     )
   ) : (

@@ -10,7 +10,7 @@ import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline'
 
 import { sumAmounts } from '../../utils/sumAmounts'
 
-const TableWithQuotes = ({ sectionName, items, setItems }) => {
+const TableWithQuotes = ({ userRole, sectionName, items, setItems }) => {
   const cm = useRef(null)
   const [selectedItem, setSelectedItem] = useState([])
 
@@ -99,26 +99,32 @@ const TableWithQuotes = ({ sectionName, items, setItems }) => {
         {items.map((item, itemIdx) => (
           <div key={item.id} className="mb-8">
             <h6 className="flex justify-between font-bold text-md itemLabelMain text-slate-900">
-              <InputText
-                value={item.label}
-                onChange={(e) => setItemValue(e.target.value, itemIdx)}
-              />
-              <div className="flex">
-                <button
-                  type="button"
-                  onClick={() => deleteItem(itemIdx)}
-                  className="inline-flex items-center px-2 py-1 mr-4 text-sm font-medium text-red-600 bg-white border border-red-100 rounded-sm shadow-sm hover:border-red-300 hover:bg-red-50 focus:outline-none"
-                >
-                  <TrashIcon className="w-4 h-4" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => addNewItem(itemIdx)}
-                  className="inline-flex items-center px-2 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-sm shadow-sm hover:bg-gray-50 focus:outline-none"
-                >
-                  <PlusIcon className="w-4 h-4" />
-                </button>
-              </div>
+              {userRole.isUser ? (
+                item.label
+              ) : (
+                <>
+                  <InputText
+                    value={item.label}
+                    onChange={(e) => setItemValue(e.target.value, itemIdx)}
+                  />
+                  <div className="flex">
+                    <button
+                      type="button"
+                      onClick={() => deleteItem(itemIdx)}
+                      className="inline-flex items-center px-2 py-1 mr-4 text-sm font-medium text-red-600 bg-white border border-red-100 rounded-sm shadow-sm hover:border-red-300 hover:bg-red-50 focus:outline-none"
+                    >
+                      <TrashIcon className="w-4 h-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => addNewItem(itemIdx)}
+                      className="inline-flex items-center px-2 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-sm shadow-sm hover:bg-gray-50 focus:outline-none"
+                    >
+                      <PlusIcon className="w-4 h-4" />
+                    </button>
+                  </div>
+                </>
+              )}
             </h6>
             <div className="flex flex-col mt-2">
               <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -158,60 +164,72 @@ const TableWithQuotes = ({ sectionName, items, setItems }) => {
                           <tr
                             key={nestedItem.id}
                             onContextMenu={(e) => {
-                              setSelectedItem([itemIdx, nestedItemIdx])
-                              cm.current.show(e)
+                              if (!userRole.isUser) {
+                                setSelectedItem([itemIdx, nestedItemIdx])
+                                cm.current.show(e)
+                              }
                             }}
                             className="border-b border-gray-200 divide-x divide-gray-200 "
                           >
                             <td className="w-max-[60%] w-[60%] py-4 pl-4 pr-3 text-sm sm:pl-6 md:pl-4">
                               <div className="font-medium text-gray-900 itemLabel">
-                                <InputTextarea
-                                  value={nestedItem.label}
-                                  onChange={(e) =>
-                                    setItemValue(
-                                      e.target.value,
-                                      itemIdx,
-                                      nestedItemIdx,
-                                      'label'
-                                    )
-                                  }
-                                  autoResize
-                                />
+                                {userRole.isUser ? (
+                                  nestedItem.label
+                                ) : (
+                                  <InputTextarea
+                                    value={nestedItem.label}
+                                    onChange={(e) =>
+                                      setItemValue(
+                                        e.target.value,
+                                        itemIdx,
+                                        nestedItemIdx,
+                                        'label'
+                                      )
+                                    }
+                                    autoResize
+                                  />
+                                )}
                               </div>
                             </td>
                             <td className="hidden px-3 py-4 text-sm text-right text-gray-500 sm:table-cell">
                               <InputNumber
                                 inputId="decimal-qty"
                                 value={nestedItem.qty}
-                                onValueChange={(e) =>
-                                  setItemValue(
-                                    e.value,
-                                    itemIdx,
-                                    nestedItemIdx,
-                                    'qty'
-                                  )
-                                }
+                                onValueChange={(e) => {
+                                  if (!userRole.isUser) {
+                                    setItemValue(
+                                      e.value,
+                                      itemIdx,
+                                      nestedItemIdx,
+                                      'qty'
+                                    )
+                                  }
+                                }}
                                 min="0"
                                 mode="decimal"
                                 locale="en-US"
                                 minFractionDigits={2}
+                                disabled={userRole.isUser}
                               />
                             </td>
                             <td className="hidden px-3 py-4 text-sm text-right text-gray-500 sm:table-cell">
                               <InputNumber
                                 inputId="currency-pricePerQty"
                                 value={nestedItem.pricePerQty}
-                                onValueChange={(e) =>
-                                  setItemValue(
-                                    e.value,
-                                    itemIdx,
-                                    nestedItemIdx,
-                                    'pricePerQty'
-                                  )
-                                }
+                                onValueChange={(e) => {
+                                  if (!userRole.isUser) {
+                                    setItemValue(
+                                      e.value,
+                                      itemIdx,
+                                      nestedItemIdx,
+                                      'pricePerQty'
+                                    )
+                                  }
+                                }}
                                 mode="currency"
                                 currency="USD"
                                 locale="en-US"
+                                disabled={userRole.isUser}
                               />
                             </td>
                             <td className="py-4 pl-3 pr-4 text-sm text-right text-gray-500 itemAmount sm:pr-6 md:pr-4">
@@ -266,23 +284,25 @@ const TableWithQuotes = ({ sectionName, items, setItems }) => {
           </div>
         ))}
 
-        <div className="relative">
-          <div
-            className="absolute inset-0 flex items-center"
-            aria-hidden="true"
-          >
-            <div className="w-full border-t border-gray-300" />
-          </div>
-          <div className="relative flex justify-center">
-            <button
-              type="button"
-              onClick={() => addNewItem()}
-              className="inline-flex items-center px-2 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-sm shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        {!userRole.isUser && (
+          <div className="relative">
+            <div
+              className="absolute inset-0 flex items-center"
+              aria-hidden="true"
             >
-              <PlusIcon className="w-4 h-4" />
-            </button>
+              <div className="w-full border-t border-gray-300" />
+            </div>
+            <div className="relative flex justify-center">
+              <button
+                type="button"
+                onClick={() => addNewItem()}
+                className="inline-flex items-center px-2 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-sm shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >
+                <PlusIcon className="w-4 h-4" />
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   )

@@ -26,6 +26,10 @@ export default validateRoute(async (req, res, user) => {
 
     const [projectDetail] = project.projectDetails
 
+    if (user.role !== 'ADMIN' && user.role !== 'MANAGER') {
+      isAuthorized = false
+    }
+
     if (projectDetail) {
       project = projectDetail
       if (user.role !== 'ADMIN' && user.role !== 'MANAGER') {
@@ -36,6 +40,11 @@ export default validateRoute(async (req, res, user) => {
           })
         } else {
           isAuthorized = false
+        }
+
+        // remove items that are only for MANAGERS
+        if (isAuthorized) {
+          delete project.config.contractors
         }
       }
 

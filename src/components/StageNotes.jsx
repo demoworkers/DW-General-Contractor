@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Markup } from 'interweave'
 
 const CONFIG = {
   toolbar: [
@@ -19,7 +20,7 @@ const CONFIG = {
   ],
 }
 
-const StageNotes = ({ notes, setNotes }) => {
+const StageNotes = ({ userRole, notes, setNotes }) => {
   const editorRef = useRef()
   const [editorLoaded, setEditorLoaded] = useState(false)
   const { CKEditor, ClassicEditor } = editorRef.current || {}
@@ -36,7 +37,7 @@ const StageNotes = ({ notes, setNotes }) => {
       <div className="mt-6 mb-2 sm:flex sm:items-center sm:justify-between">
         <h3 className="font-medium leading-6 text-gray-900 text-md">Notes</h3>
       </div>
-      {editorLoaded && (
+      {!userRole.isUser && editorLoaded && (
         <CKEditor
           editor={ClassicEditor}
           data={notes}
@@ -46,6 +47,11 @@ const StageNotes = ({ notes, setNotes }) => {
             setNotes(data)
           }}
         />
+      )}
+      {userRole.isUser && (
+        <div className="p-4 bg-white border border-gray-200 rounded-sm">
+          <Markup content={notes} />
+        </div>
       )}
     </>
   )

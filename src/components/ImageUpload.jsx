@@ -8,6 +8,7 @@ import { XCircleIcon } from '@heroicons/react/20/solid'
 import { Spinner } from './Spinner'
 
 const ImageUpload = ({
+  userRole,
   sectionLabel = 'Photos',
   buttonId = 'files',
   images = [],
@@ -77,43 +78,47 @@ const ImageUpload = ({
         <h3 className="text-lg font-medium leading-6 text-gray-900">
           {sectionLabel}
         </h3>
-        <div className="mt-3 sm:mt-0 sm:ml-4">
-          <label
-            htmlFor={buttonId}
-            className="inline-flex items-center px-2 py-1 text-sm font-medium text-gray-700 bg-white border border-transparent border-gray-300 rounded-sm shadow-sm cursor-pointer hover:bg-gray-50 focus:outline-none"
-          >
-            {loading ? (
-              <Spinner />
-            ) : (
-              <>
-                <PlusIcon className="w-4 h-4 mr-1" /> Add New
-              </>
-            )}
-            <input
-              ref={uploadButtonRef}
-              id={buttonId}
-              name="files"
-              type="file"
-              multiple
-              accept="image/*"
-              onChange={handleChange}
-              className="hidden"
-            />
-          </label>
-        </div>
+        {!userRole.isUser && (
+          <div className="mt-3 sm:mt-0 sm:ml-4">
+            <label
+              htmlFor={buttonId}
+              className="inline-flex items-center px-2 py-1 text-sm font-medium text-gray-700 bg-white border border-transparent border-gray-300 rounded-sm shadow-sm cursor-pointer hover:bg-gray-50 focus:outline-none"
+            >
+              {loading ? (
+                <Spinner />
+              ) : (
+                <>
+                  <PlusIcon className="w-4 h-4 mr-1" /> Add New
+                </>
+              )}
+              <input
+                ref={uploadButtonRef}
+                id={buttonId}
+                name="files"
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={handleChange}
+                className="hidden"
+              />
+            </label>
+          </div>
+        )}
       </div>
       <div className="p-4 bg-white border border-gray-200 rounded-sm">
         <div className="grid grid-cols-1 mt-6 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {images.map((image, imageIdx) => (
             <div key={image} className="relative group">
               <div className="relative w-full overflow-hidden bg-gray-200 rounded-sm min-h-80 aspect-w-1 aspect-h-1 lg:aspect-none">
-                <button
-                  type="button"
-                  onClick={() => handleImageRemove(imageIdx)}
-                  className="absolute -right-1 -top-0.5 hidden cursor-pointer hover:text-red-600 group-hover:block"
-                >
-                  <XCircleIcon className="w-6 h-6 mr-1" />
-                </button>
+                {!userRole.isUser && (
+                  <button
+                    type="button"
+                    onClick={() => handleImageRemove(imageIdx)}
+                    className="absolute -right-1 -top-0.5 hidden cursor-pointer hover:text-red-600 group-hover:block"
+                  >
+                    <XCircleIcon className="w-6 h-6 mr-1" />
+                  </button>
+                )}
                 <img
                   src={image}
                   className="object-cover object-center w-full h-full lg:h-full lg:w-full"
