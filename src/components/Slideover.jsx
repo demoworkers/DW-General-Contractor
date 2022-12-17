@@ -2,16 +2,16 @@ import { Fragment, useEffect, useState, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { Markup } from 'interweave'
 
+import toast from 'react-hot-toast'
+
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import { InformationCircleIcon } from '@heroicons/react/20/solid'
 
 import fetcher from '../../lib/fetcher'
 import { calculateTimeSince } from '../../utils/dateAndTime'
 
 import { Spinner } from './Spinner'
 import { Ellipsis } from './Ellipsis'
-import FilePond from './FilePond'
 
 const CONFIG = {
   toolbar: [
@@ -39,8 +39,6 @@ const Slideover = ({
   onClose,
   onSave,
 }) => {
-  // const [imageFiles, setImageFiles] = useState([])
-
   const [loadingNoteEntries, setLoadingNoteEntries] = useState(false)
   const [noteEntries, setNoteEntries] = useState([])
 
@@ -50,18 +48,22 @@ const Slideover = ({
 
   const { CKEditor, ClassicEditor } = editorRef.current || {}
 
-  // useEffect(() => {
-  //   console.log({ imageFiles })
-  // }, [imageFiles])
-
   useEffect(() => {
     async function fetchData() {
       setLoadingNoteEntries(true)
-      const entries = await fetcher('notes/entries', {
+      const response = await fetcher('notes/entries', {
         noteId,
       })
-      setNoteEntries(entries)
+
       setLoadingNoteEntries(false)
+
+      // error
+      if (!response.success) {
+        toast.error(response.message)
+        return
+      }
+      // success
+      setNoteEntries(response.data.entries)
     }
 
     if (isOpen) {
@@ -184,14 +186,6 @@ const Slideover = ({
                               <Spinner />
                             </div>
                           )}
-                          {/* <FilePond
-                            files={imageFiles}
-                            setFiles={(fileItems) => {
-                              setImageFiles(
-                                fileItems.map((fileItem) => fileItem.file)
-                              )
-                            }}
-                          /> */}
                         </div>
                       </div>
                       {noteEntries.length > 0 && (

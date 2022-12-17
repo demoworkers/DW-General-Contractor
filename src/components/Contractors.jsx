@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react'
 import { MultiSelect } from 'primereact/multiselect'
 import { Skeleton } from 'primereact/skeleton'
-import { useTeam } from 'lib/hooks'
+
+import { useTeam } from '../../lib/hooks'
 
 const Contractors = ({ selectedContractors, onContractorSelect }) => {
   const { data: contractors, mutate: mutateAll, isLoading, isError } = useTeam()

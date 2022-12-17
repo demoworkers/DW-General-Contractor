@@ -21,12 +21,16 @@ export default validateRoute(async (req, res, user) => {
         created_at: 'desc',
       },
     })
-    res.json(notes)
+
+    res.status(200).json({
+      success: true,
+      message: 'Notes loaded',
+      data: { notes },
+    })
   } catch (error) {
-    res.status(500)
-    res.json({
-      error: 'Could not add the note',
-      realError: error.message,
+    res.status(500).json({
+      success: false,
+      error: 'Notes not loaded',
     })
   }
 })

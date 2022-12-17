@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 
+import toast from 'react-hot-toast'
+
 import { PlusIcon } from '@heroicons/react/24/outline'
 import { CalendarIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 
@@ -53,6 +55,15 @@ const NotesLayout = ({ projectId }) => {
       noteName,
       entry,
     })
+
+    // error
+    if (!response.success) {
+      toast.error(response.message)
+      return
+    }
+    // success
+    toast.success(response.message)
+    // close slide over
     handleSliderOverClose(false)
   }
 
