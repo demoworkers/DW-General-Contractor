@@ -4,9 +4,29 @@ import { getFormattedProjects } from '../../../../utils/getFormattedProjects'
 
 export default validateRoute(async (req, res, user) => {
   try {
-    const projects = await prisma.projects.findMany({
+    let projects = []
+
+    projects = await prisma.projects.findMany({
+      select: {
+        id: true,
+        name: true,
+        stage: true,
+        status: true,
+        createdAt: true,
+        projectDetails: true,
+      },
       orderBy: { createdAt: 'desc' },
     })
+
+    if (user.role !== 'ADMIN' && user.role !== 'MANAGER') {
+      projects = projects.filter((project) => {
+        return project.projectDetails.some((projectDetail) => {
+          return projectDetail.config.contractors.some((contractor) => {
+            return contractor.id === user.id
+          })
+        })
+      })
+    }
 
     const formattedProjects = getFormattedProjects(projects)
 

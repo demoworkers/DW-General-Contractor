@@ -6,8 +6,10 @@ export default validateRoute(async (req, res, user) => {
 
   projectId = Number(projectId)
 
+  let isAuthorized = true
+
   try {
-    let stageInfo = await prisma.projects.findUnique({
+    let project = await prisma.projects.findUnique({
       where: { id: projectId },
       select: {
         projectDetails: {
@@ -22,13 +24,32 @@ export default validateRoute(async (req, res, user) => {
       },
     })
 
-    if (stageInfo && stageInfo.projectDetails[0]) {
-      stageInfo = stageInfo.projectDetails[0]
+    const [projectDetail] = project.projectDetails
+
+    if (projectDetail) {
+      project = projectDetail
+      if (user.role !== 'ADMIN' && user.role !== 'MANAGER') {
+        // check if the user is in "contractors"
+        if (Array.isArray(project.config.contractors)) {
+          isAuthorized = project.config.contractors.some((contractor) => {
+            return contractor.id === user.id
+          })
+        } else {
+          isAuthorized = false
+        }
+      }
+
+      if (!isAuthorized) {
+        project = {}
+      }
     }
 
-    res
-      .status(200)
-      .json({ success: true, message: 'Stage saved', data: { stageInfo } })
+    res.status(200).json({
+      success: true,
+      isAuthorized,
+      message: 'Stage loaded',
+      data: { stageInfo: project },
+    })
   } catch (error) {
     res.status(500).json({
       success: false,

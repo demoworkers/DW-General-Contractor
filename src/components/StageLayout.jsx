@@ -18,6 +18,7 @@ const StageLayout = ({
   enabledSections = {},
   onStageComplete,
 }) => {
+  const [isAuthorized, setIsAuthorized] = useState(false)
   const [contractors, setContractors] = useState('')
   const [workScope, setWorkScope] = useState([])
   const [notes, setNotes] = useState('')
@@ -84,6 +85,11 @@ const StageLayout = ({
       })
 
       if (response.success) {
+        setIsAuthorized(response.isAuthorized)
+
+        if (!response.isAuthorized) {
+          return
+        }
         // set in state
         setResponseState(response.data.stageInfo)
       } else {
@@ -151,76 +157,81 @@ const StageLayout = ({
     setIsSaving(false)
   }
 
-  return isLoading ? (
-    <Ellipsis />
-  ) : (
-    <>
-      {enabledSections.contractors && (
-        <Contractors
-          selectedContractors={contractors}
-          onContractorSelect={(val) => setContractors(val)}
-        />
-      )}
-      {enabledSections.tableWithQuotes && (
-        <TableWithQuotes
-          sectionName={enabledSections.sectionName}
-          items={workScope}
-          setItems={setWorkScope}
-        />
-      )}
-      {enabledSections.photos && (
-        <ImageUpload
-          buttonId="photos"
-          images={photos}
-          onImagesUpdate={setPhotos}
-        />
-      )}
-      {enabledSections.dateSelect && (
-        <DateSelect
-          sectionLabel={enabledSections.dateSelectLabel}
-          date={dateSelect}
-          onDateUpdate={setDateSelect}
-        />
-      )}
-      {enabledSections.notes && (
-        <StageNotes notes={notes} setNotes={setNotes} />
-      )}
+  // eslint-disable-next-line no-nested-ternary
+  return isAuthorized ? (
+    isLoading ? (
+      <Ellipsis />
+    ) : (
+      <>
+        {enabledSections.contractors && (
+          <Contractors
+            selectedContractors={contractors}
+            onContractorSelect={(val) => setContractors(val)}
+          />
+        )}
+        {enabledSections.tableWithQuotes && (
+          <TableWithQuotes
+            sectionName={enabledSections.sectionName}
+            items={workScope}
+            setItems={setWorkScope}
+          />
+        )}
+        {enabledSections.photos && (
+          <ImageUpload
+            buttonId="photos"
+            images={photos}
+            onImagesUpdate={setPhotos}
+          />
+        )}
+        {enabledSections.dateSelect && (
+          <DateSelect
+            sectionLabel={enabledSections.dateSelectLabel}
+            date={dateSelect}
+            onDateUpdate={setDateSelect}
+          />
+        )}
+        {enabledSections.notes && (
+          <StageNotes notes={notes} setNotes={setNotes} />
+        )}
 
-      {enabledSections.colorDrawings && (
-        <ImageUpload
-          buttonId="colorDrawings"
-          sectionLabel={enabledSections.colorDrawingsLabel}
-          images={colorDrawings}
-          onImagesUpdate={setColorDrawings}
-        />
-      )}
+        {enabledSections.colorDrawings && (
+          <ImageUpload
+            buttonId="colorDrawings"
+            sectionLabel={enabledSections.colorDrawingsLabel}
+            images={colorDrawings}
+            onImagesUpdate={setColorDrawings}
+          />
+        )}
 
-      <footer className="flex justify-between pt-6 right-16 bottom-16">
-        {stageStatus !== 'COMPLETED' && (
+        <footer className="flex justify-between pt-6 right-16 bottom-16">
+          {stageStatus !== 'COMPLETED' && (
+            <button
+              type="button"
+              onClick={isSaving ? null : handleCompleteStage}
+              className="inline-flex items-center px-3 py-1 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-sm shadow-sm hover:bg-indigo-700 focus:outline-none"
+            >
+              {isSaving ? <Spinner /> : <span>Complete this Stage</span>}
+            </button>
+          )}
           <button
             type="button"
-            onClick={isSaving ? null : handleCompleteStage}
-            className="inline-flex items-center px-3 py-1 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-sm shadow-sm hover:bg-indigo-700 focus:outline-none"
+            onClick={isSaving ? null : () => handleStageSave(false)}
+            className="inline-flex items-center px-2 py-1 ml-auto text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-sm shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           >
-            {isSaving ? <Spinner /> : <span>Complete this Stage</span>}
+            {isSaving ? (
+              <Spinner />
+            ) : (
+              <>
+                <CheckIcon className="w-4 h-4 mr-1" />
+                <span>Save</span>
+              </>
+            )}
           </button>
-        )}
-        <button
-          type="button"
-          onClick={isSaving ? null : () => handleStageSave(false)}
-          className="inline-flex items-center px-2 py-1 ml-auto text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-sm shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-        >
-          {isSaving ? (
-            <Spinner />
-          ) : (
-            <>
-              <CheckIcon className="w-4 h-4 mr-1" />
-              <span>Save</span>
-            </>
-          )}
-        </button>
-      </footer>
-    </>
+        </footer>
+      </>
+    )
+  ) : (
+    <></>
   )
 }
 
