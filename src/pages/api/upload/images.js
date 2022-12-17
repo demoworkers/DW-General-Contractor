@@ -1,8 +1,8 @@
 import fs from 'fs'
 import formidable from 'formidable'
 
-import { validateRoute } from '../../../lib/auth'
-import { s3Client } from '../../../lib/s3'
+import { validateRoute } from '../../../../lib/auth'
+import { s3Client } from '../../../../lib/s3'
 
 export default validateRoute(async (req, res, user) => {
   try {

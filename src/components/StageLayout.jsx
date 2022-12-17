@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
-import { ArrowRightIcon, CheckIcon } from '@heroicons/react/24/outline'
+import { CheckIcon } from '@heroicons/react/24/outline'
 
 import fetcher from '../../lib/fetcher'
 
@@ -12,20 +12,16 @@ import TableWithQuotes from './TableWithQuotes'
 import { Ellipsis } from './Ellipsis'
 import ImageUpload from './ImageUpload'
 
-const contractorsDB = ''
-const stageNotesDB = ''
-const workScopeDB = []
-const photosDB = []
-
 const StageLayout = ({
   projectInfo: { id: projectId, stage: projectActiveStage },
   enabledSections = {},
   onStageComplete,
 }) => {
-  const [contractors, setContractors] = useState(contractorsDB)
-  const [workScope, setWorkScope] = useState(workScopeDB)
-  const [notes, setNotes] = useState(stageNotesDB)
-  const [photos, setPhotos] = useState(photosDB)
+  const [contractors, setContractors] = useState('')
+  const [workScope, setWorkScope] = useState([])
+  const [notes, setNotes] = useState('')
+  const [photos, setPhotos] = useState([])
+  const [colorDrawings, setColorDrawings] = useState([])
   const [stageStatus, setStageStatus] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
@@ -37,7 +33,7 @@ const StageLayout = ({
       }
 
       if (response.config) {
-        return response.config[type]
+        return response.config[type] || defaultValue
       }
     }
     return defaultValue
@@ -62,6 +58,10 @@ const StageLayout = ({
     if (enabledSections.notes) {
       const notesValues = getStateValue(response, 'notes', [])
       setNotes(notesValues)
+    }
+    if (enabledSections.colorDrawings) {
+      const colorDrawingsValues = getStateValue(response, 'colorDrawings', [])
+      setColorDrawings(colorDrawingsValues)
     }
   }
 
@@ -92,15 +92,28 @@ const StageLayout = ({
 
   const handleStageSave = async (isNext = false) => {
     setIsSaving(true)
+
+    const config = {}
+    if (enabledSections.contractors) {
+      config.contractors = contractors
+    }
+    if (enabledSections.tableWithQuotes) {
+      config.workScope = workScope
+    }
+    if (enabledSections.photos) {
+      config.photos = photos
+    }
+    if (enabledSections.notes) {
+      config.notes = notes
+    }
+    if (enabledSections.colorDrawings) {
+      config.colorDrawings = colorDrawings
+    }
+
     const response = await fetcher('stage/save', {
       projectId,
       projectStage: projectActiveStage,
-      config: {
-        contractors,
-        workScope,
-        photos,
-        notes,
-      },
+      config,
     })
 
     if (response.success) {
@@ -146,10 +159,22 @@ const StageLayout = ({
         />
       )}
       {enabledSections.photos && (
-        <ImageUpload images={photos} onImagesUpdate={setPhotos} />
+        <ImageUpload
+          buttonId="photos"
+          images={photos}
+          onImagesUpdate={setPhotos}
+        />
       )}
       {enabledSections.notes && (
         <StageNotes notes={notes} setNotes={setNotes} />
+      )}
+      {enabledSections.colorDrawings && (
+        <ImageUpload
+          buttonId="colorDrawings"
+          sectionLabel={enabledSections.colorDrawingsLabel}
+          images={colorDrawings}
+          onImagesUpdate={setColorDrawings}
+        />
       )}
 
       <footer className="flex justify-between pt-6 right-16 bottom-16">
@@ -159,14 +184,7 @@ const StageLayout = ({
             onClick={isSaving ? null : handleCompleteStage}
             className="inline-flex items-center px-3 py-1 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-sm shadow-sm hover:bg-indigo-700 focus:outline-none"
           >
-            {isSaving ? (
-              <Spinner />
-            ) : (
-              <>
-                <span>Complete this Stage</span>
-                {/* <ArrowRightIcon className="w-4 h-4 ml-1" /> */}
-              </>
-            )}
+            {isSaving ? <Spinner /> : <span>Complete this Stage</span>}
           </button>
         )}
         <button

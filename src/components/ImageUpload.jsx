@@ -7,7 +7,12 @@ import { XCircleIcon } from '@heroicons/react/20/solid'
 
 import { Spinner } from './Spinner'
 
-const ImageUpload = ({ images = [], onImagesUpdate }) => {
+const ImageUpload = ({
+  sectionLabel = 'Photos',
+  buttonId = 'files',
+  images = [],
+  onImagesUpdate,
+}) => {
   const uploadButtonRef = useRef(null)
   const [loading, setLoading] = useState(false)
 
@@ -69,10 +74,12 @@ const ImageUpload = ({ images = [], onImagesUpdate }) => {
   return (
     <>
       <div className="mt-6 mb-2 sm:flex sm:items-center sm:justify-between">
-        <h3 className="text-lg font-medium leading-6 text-gray-900">Photos</h3>
+        <h3 className="text-lg font-medium leading-6 text-gray-900">
+          {sectionLabel}
+        </h3>
         <div className="mt-3 sm:mt-0 sm:ml-4">
           <label
-            htmlFor="files"
+            htmlFor={buttonId}
             className="inline-flex items-center px-2 py-1 text-sm font-medium text-gray-700 bg-white border border-transparent border-gray-300 rounded-sm shadow-sm cursor-pointer hover:bg-gray-50 focus:outline-none"
           >
             {loading ? (
@@ -84,7 +91,7 @@ const ImageUpload = ({ images = [], onImagesUpdate }) => {
             )}
             <input
               ref={uploadButtonRef}
-              id="files"
+              id={buttonId}
               name="files"
               type="file"
               multiple

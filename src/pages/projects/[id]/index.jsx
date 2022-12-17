@@ -26,6 +26,8 @@ const ENABLED_SECTIONS = {
     photos: true,
     notes: true,
     sectionName: 'Materials',
+    colorDrawings: true,
+    colorDrawingsLabel: 'Color Drawings',
   },
   RECONSTRUCTION: {
     contractors: true,
