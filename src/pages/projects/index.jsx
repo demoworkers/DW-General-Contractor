@@ -141,10 +141,10 @@ const Projects = ({ userRole }) => {
 
     return (
       <tr>
-        <td className="p-8 text-center" colSpan="4">
+        <td className="p-8 text-center" colSpan="5">
           <div className="justify-center sm:flex">
             <h6 className="text-sm font-medium leading-6 text-gray-900">
-              No members exist
+              No projects exist
             </h6>
           </div>
         </td>
