@@ -79,7 +79,7 @@ const Project = ({ userRole, projectInfoServerProps }) => {
             />
           </h2>
         </div>
-        {(userRole.isAdmin || userRole.isManager) && (
+        {userRole && (userRole.isAdmin || userRole.isManager) && (
           <div className="flex mt-4 md:mt-0 md:ml-4">
             <button
               type="button"

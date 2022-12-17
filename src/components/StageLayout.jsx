@@ -61,7 +61,7 @@ const StageLayout = ({
       setPhotos(photosValues)
     }
     if (enabledSections.notes) {
-      const notesValues = getStateValue(response, 'notes', [])
+      const notesValues = getStateValue(response, 'notes', '')
       setNotes(notesValues)
     }
     if (enabledSections.colorDrawings) {

@@ -48,7 +48,7 @@ const StageNotes = ({ userRole, notes, setNotes }) => {
           }}
         />
       )}
-      {userRole.isUser && (
+      {userRole.isUser && notes && (
         <div className="p-4 bg-white border border-gray-200 rounded-sm">
           <Markup content={notes} />
         </div>
