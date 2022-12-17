@@ -1,5 +1,7 @@
 import { useState, useRef } from 'react'
 
+import toast from 'react-hot-toast'
+
 import { PlusIcon } from '@heroicons/react/24/outline'
 import { XCircleIcon } from '@heroicons/react/20/solid'
 
@@ -15,10 +17,13 @@ const ImageUpload = ({ images = [], onImagesUpdate }) => {
       formData.append('files', imageFiles[i])
     }
 
-    const response = await fetch(`${window.location.origin}/api/upload`, {
-      method: 'POST',
-      body: formData,
-    })
+    const response = await fetch(
+      `${window.location.origin}/api/upload/images`,
+      {
+        method: 'POST',
+        body: formData,
+      }
+    )
 
     const res = await response.json()
 
@@ -28,8 +33,8 @@ const ImageUpload = ({ images = [], onImagesUpdate }) => {
 
       onImagesUpdate(updatedImageUrls)
     } else {
-      console.log('error', res.error)
-      // TODO: show error toast
+      // show error toast
+      toast.error(res.error)
     }
 
     // reset file upload button

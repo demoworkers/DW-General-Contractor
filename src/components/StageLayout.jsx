@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { nanoid } from 'nanoid'
+import toast from 'react-hot-toast'
 
 import { ArrowRightIcon, CheckIcon } from '@heroicons/react/24/outline'
 
@@ -80,7 +80,8 @@ const StageLayout = ({
         // set in state
         setResponseState(response.data.stageInfo)
       } else {
-        // TODO: show error toast
+        // show error toast
+        toast.error(response.message)
       }
 
       // disable loading
@@ -107,11 +108,14 @@ const StageLayout = ({
         setIsSaving(false)
       }
 
-      // TODO: show success toast
+      // show success toast
+      toast.success(response.message)
+
       return true
     }
 
-    // TODO: show error toast
+    // show error toast
+    toast.error(response.message)
     return false
   }
 

@@ -2,6 +2,8 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useSWRConfig } from 'swr'
 
+import toast from 'react-hot-toast'
+
 import fetcher from '../../../lib/fetcher'
 import { useProjects } from '../../../lib/hooks'
 
@@ -19,8 +21,6 @@ const Projects = ({ userRole }) => {
   const [isNew, setIsNew] = useState(false)
   const [selectedProject, setSelectedProject] = useState(null)
   const [isSliderOverOpen, setIsSliderOverOpen] = useState(false)
-
-  const { mutate } = useSWRConfig()
 
   const {
     data: projects,
@@ -44,25 +44,20 @@ const Projects = ({ userRole }) => {
     }
 
     const { id } = item
-    const updatedProjects = projects
-      .map((project) => {
-        if (project.id === id) {
-          if (type === 'delete') {
-            project = null
-          }
-        }
-        return project
-      })
-      .filter(Boolean)
 
-    const options = { optimisticData: updatedProjects, rollbackOnError: true }
+    const response = await fetcher('projects/update', {
+      type,
+      id,
+    })
 
-    await mutate(
-      'updateProject',
-      fetcher('updateProject', { type, id }),
-      options
-    )
-
+    // error
+    if (!response.success) {
+      toast.error(response.message)
+      return
+    }
+    // success
+    toast.success(response.message)
+    // refetch
     mutateAll()
   }
 
@@ -78,13 +73,21 @@ const Projects = ({ userRole }) => {
     const type = isNewProject ? 'new' : 'edit'
     const id = isNewProject ? undefined : updatedProject.id
 
-    await mutate(
-      'updateProject',
-      fetcher('updateProject', { type, id, data: updatedProject })
-    )
+    const response = await fetcher('projects/update', {
+      type,
+      id,
+      data: updatedProject,
+    })
 
+    // error
+    if (!response.success) {
+      toast.error(response.message)
+      return
+    }
+    // success
+    toast.success(response.message)
+    // refetch
     mutateAll()
-
     // hide slideover
     handleSliderOverClose(false)
   }

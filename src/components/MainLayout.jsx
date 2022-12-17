@@ -2,6 +2,7 @@ import { Fragment, useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 
+import { Toaster } from 'react-hot-toast'
 import { Dialog, Transition } from '@headlessui/react'
 
 import {
@@ -225,6 +226,7 @@ const MainLayout = ({ userRole, children }) => {
           </div>
         </main>
       </div>
+      <Toaster position="top-center" reverseOrder />
     </>
   )
 }

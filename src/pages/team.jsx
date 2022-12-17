@@ -1,5 +1,7 @@
 import { useSWRConfig } from 'swr'
 
+import toast from 'react-hot-toast'
+
 import { useTeam } from '../../lib/hooks'
 import { titleCase } from '../../utils/formattedString'
 
@@ -33,27 +35,34 @@ const Team = ({ userRole }) => {
       })
       .filter(Boolean)
 
-    const options = { optimisticData: updatedUsers, rollbackOnError: true }
+    const response = await fetcher('team/manage', { type, userId })
 
-    await mutate('updateTeam', fetcher('updateTeam', { type, userId }), options)
-
+    // error
+    if (!response.success) {
+      toast.error(response.message)
+      return
+    }
+    // success
+    toast.success(response.message)
+    // refetch
     mutateAll()
   }
 
   const updateUserRole = async (userId, role) => {
-    const userUpdate = await fetcher('updateUserRole', {
+    const response = await fetcher('team/updateRole', {
       userId,
       role,
     })
 
-    mutateAll()
-
-    if (userUpdate.error) {
-      console.error(userUpdate.error)
+    // error
+    if (!response.success) {
+      toast.error(response.message)
       return
     }
-
-    console.log(userUpdate.message)
+    // success
+    toast.success(response.message)
+    // refetch
+    mutateAll()
   }
 
   const renderUsersOrEmpty = (renderUsers) => {

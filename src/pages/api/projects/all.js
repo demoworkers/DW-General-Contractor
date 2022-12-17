@@ -1,6 +1,6 @@
-import { prisma } from '../../../lib/prisma'
-import { validateRoute } from '../../../lib/auth'
-import { getFormattedProjects } from '../../../utils/getFormattedProjects'
+import { prisma } from '../../../../lib/prisma'
+import { validateRoute } from '../../../../lib/auth'
+import { getFormattedProjects } from '../../../../utils/getFormattedProjects'
 
 export default validateRoute(async (req, res, user) => {
   try {

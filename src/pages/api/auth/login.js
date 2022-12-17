@@ -4,7 +4,7 @@ import cookie from 'cookie'
 import nc from 'next-connect'
 import cors from 'cors'
 
-import { prisma } from '../../../lib/prisma'
+import { prisma } from '../../../../lib/prisma'
 
 const handler = nc()
   .use(cors())

@@ -39,7 +39,7 @@ const Login = () => {
     }
 
     try {
-      await auth('login', { email, password })
+      await auth('auth/login', { email, password })
     } catch (e) {
       if (e) {
         setErrorMessage(e)

@@ -1,5 +1,5 @@
-import { prisma } from '../../../lib/prisma'
-import { validateRoute } from '../../../lib/auth'
+import { prisma } from '../../../../lib/prisma'
+import { validateRoute } from '../../../../lib/auth'
 
 export default validateRoute(async (req, res, user) => {
   const { type, userId } = req.body
@@ -40,9 +40,7 @@ export default validateRoute(async (req, res, user) => {
         break
     }
 
-    res
-      .status(201)
-      .json({ success: true, message: 'User role updated', data: {} })
+    res.status(201).json({ success: true, message: 'User updated', data: {} })
   } catch (error) {
     res.status(500).json({ success: false, error: 'User could not be updated' })
   }

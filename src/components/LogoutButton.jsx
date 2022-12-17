@@ -7,7 +7,7 @@ const LogoutButton = () => {
   const router = useRouter()
 
   const handleLogout = async () => {
-    await fetcher('logout')
+    await fetcher('auth/logout')
     router.push('/login')
   }
 

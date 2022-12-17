@@ -42,7 +42,7 @@ const Signup = () => {
 
     setErrorMessage(null)
 
-    const user = await auth('signup', { data })
+    const user = await auth('auth/signup', { data })
     router.push('/pending-verification')
   }
 
