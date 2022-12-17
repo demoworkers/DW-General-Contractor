@@ -64,12 +64,13 @@ export default validateRoute(async (req, res, user) => {
       },
     })
 
-    res.status(200).json({ message: 'success' })
+    res
+      .status(200)
+      .json({ success: true, message: 'Stage completed', data: {} })
   } catch (error) {
-    res.status(500)
-    res.json({
-      error: 'Could not update the project',
-      realError: error.message,
+    res.status(500).json({
+      success: false,
+      error: 'Stage could not be completed',
     })
   }
 })

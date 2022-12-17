@@ -27,12 +27,15 @@ export default validateRoute(async (req, res, user) => {
       completedStages = completedStages.projectDetails
     }
 
-    res.status(200).json(completedStages)
+    res.status(200).json({
+      success: true,
+      message: 'Stage saved',
+      data: { list: completedStages },
+    })
   } catch (error) {
-    res.status(500)
-    res.json({
-      error: 'Could not update the project',
-      realError: error.message,
+    res.status(500).json({
+      success: false,
+      error: 'Completed stages not loaded',
     })
   }
 })

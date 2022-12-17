@@ -6,10 +6,8 @@ export default validateRoute(async (req, res, user) => {
 
   projectId = Number(projectId)
 
-  let stageInfo = {}
-
   try {
-    stageInfo = await prisma.projects.findUnique({
+    let stageInfo = await prisma.projects.findUnique({
       where: { id: projectId },
       select: {
         projectDetails: {
@@ -28,12 +26,13 @@ export default validateRoute(async (req, res, user) => {
       stageInfo = stageInfo.projectDetails[0]
     }
 
-    res.status(200).json(stageInfo)
+    res
+      .status(200)
+      .json({ success: true, message: 'Stage saved', data: { stageInfo } })
   } catch (error) {
-    res.status(500)
-    res.json({
-      error: 'Could not update the project',
-      realError: error.message,
+    res.status(500).json({
+      success: false,
+      error: 'Stage could not be loaded',
     })
   }
 })

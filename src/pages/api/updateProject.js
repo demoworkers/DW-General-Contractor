@@ -1,14 +1,10 @@
 import { prisma } from '../../../lib/prisma'
 import { validateRoute } from '../../../lib/auth'
 
-import { getFormattedProjects } from '../../../utils/getFormattedProjects'
-
 export default validateRoute(async (req, res, user) => {
   const { type, id, data } = req.body
 
   const dbTable = prisma.projects
-
-  let projects = []
 
   try {
     switch (type) {
@@ -43,13 +39,12 @@ export default validateRoute(async (req, res, user) => {
         break
     }
 
-    projects = await prisma.projects.findMany({ orderBy: { id: 'asc' } })
-
-    projects = getFormattedProjects(projects)
+    res
+      .status(201)
+      .json({ success: true, message: 'Project updated', data: {} })
   } catch (error) {
-    res.status(500)
-    res.json({ error: 'Could not update the project', wow: error.message })
+    res
+      .status(500)
+      .json({ success: false, error: 'Project could not be updated' })
   }
-
-  res.json(projects)
 })

@@ -2,8 +2,6 @@ import { prisma } from '../../../lib/prisma'
 import { validateRoute } from '../../../lib/auth'
 
 export default validateRoute(async (req, res, user) => {
-  // TOOD: Check if user has permissions
-
   const { userId, role } = req.body
 
   const newRole = role.toUpperCase()
@@ -17,10 +15,10 @@ export default validateRoute(async (req, res, user) => {
         role: newRole,
       },
     })
-    res.status(201)
-    res.json({ message: 'Updated' })
+    res
+      .status(201)
+      .json({ success: true, message: 'User role updated', data: {} })
   } catch (error) {
-    res.status(500)
-    res.json({ error: 'Could not update the team member' })
+    res.status(500).json({ success: false, error: 'User could not be updated' })
   }
 })

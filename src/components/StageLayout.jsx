@@ -76,8 +76,12 @@ const StageLayout = ({
         projectStage: projectActiveStage,
       })
 
-      // set in state
-      setResponseState(response)
+      if (response.success) {
+        // set in state
+        setResponseState(response.data.stageInfo)
+      } else {
+        // TODO: show error toast
+      }
 
       // disable loading
       setIsLoading(false)
@@ -87,9 +91,7 @@ const StageLayout = ({
 
   const handleStageSave = async (isNext = false) => {
     setIsSaving(true)
-    // upload photos
-    // api request - attach photos
-    await fetcher('stage/save', {
+    const response = await fetcher('stage/save', {
       projectId,
       projectStage: projectActiveStage,
       config: {
@@ -99,14 +101,25 @@ const StageLayout = ({
         notes,
       },
     })
-    if (!isNext) {
-      setIsSaving(false)
+
+    if (response.success) {
+      if (!isNext) {
+        setIsSaving(false)
+      }
+
+      // TODO: show success toast
+      return true
     }
+
+    // TODO: show error toast
+    return false
   }
 
   const handleCompleteStage = async () => {
-    await handleStageSave(true)
-    await onStageComplete()
+    const isStageSaved = await handleStageSave(true)
+    if (isStageSaved) {
+      await onStageComplete()
+    }
     // stop loading
     setIsSaving(false)
   }

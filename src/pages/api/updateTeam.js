@@ -40,11 +40,10 @@ export default validateRoute(async (req, res, user) => {
         break
     }
 
-    users = await prisma.user.findMany({})
+    res
+      .status(201)
+      .json({ success: true, message: 'User role updated', data: {} })
   } catch (error) {
-    res.status(500)
-    res.json({ error: 'Could not update the team member' })
+    res.status(500).json({ success: false, error: 'User could not be updated' })
   }
-
-  res.json(users)
 })
