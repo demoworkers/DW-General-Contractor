@@ -28,6 +28,8 @@ const ENABLED_SECTIONS = {
     sectionName: 'Materials',
     colorDrawings: true,
     colorDrawingsLabel: 'Color Drawings',
+    dateSelect: true,
+    dateSelectLabel: 'Arrival Date',
   },
   RECONSTRUCTION: {
     contractors: true,

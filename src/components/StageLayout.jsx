@@ -11,6 +11,7 @@ import Contractors from './Contractors'
 import TableWithQuotes from './TableWithQuotes'
 import { Ellipsis } from './Ellipsis'
 import ImageUpload from './ImageUpload'
+import DateSelect from './DateSelect'
 
 const StageLayout = ({
   projectInfo: { id: projectId, stage: projectActiveStage },
@@ -22,6 +23,8 @@ const StageLayout = ({
   const [notes, setNotes] = useState('')
   const [photos, setPhotos] = useState([])
   const [colorDrawings, setColorDrawings] = useState([])
+  const [dateSelect, setDateSelect] = useState(null)
+
   const [stageStatus, setStageStatus] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
@@ -62,6 +65,10 @@ const StageLayout = ({
     if (enabledSections.colorDrawings) {
       const colorDrawingsValues = getStateValue(response, 'colorDrawings', [])
       setColorDrawings(colorDrawingsValues)
+    }
+    if (enabledSections.colorDrawings) {
+      const dateSelectValues = getStateValue(response, 'dateSelect', [])
+      setDateSelect(dateSelectValues)
     }
   }
 
@@ -108,6 +115,9 @@ const StageLayout = ({
     }
     if (enabledSections.colorDrawings) {
       config.colorDrawings = colorDrawings
+    }
+    if (enabledSections.dateSelect) {
+      config.dateSelect = dateSelect
     }
 
     const response = await fetcher('stage/save', {
@@ -165,9 +175,17 @@ const StageLayout = ({
           onImagesUpdate={setPhotos}
         />
       )}
+      {enabledSections.dateSelect && (
+        <DateSelect
+          sectionLabel={enabledSections.dateSelectLabel}
+          date={dateSelect}
+          onDateUpdate={setDateSelect}
+        />
+      )}
       {enabledSections.notes && (
         <StageNotes notes={notes} setNotes={setNotes} />
       )}
+
       {enabledSections.colorDrawings && (
         <ImageUpload
           buttonId="colorDrawings"
