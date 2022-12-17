@@ -12,17 +12,17 @@ const run = async () => {
       {
         name: 'Project Scrapper',
         status: 'OPEN',
-        state: 'BIDDING',
+        stage: 'BIDDING',
       },
       {
         name: 'Hightower',
         status: 'OPEN',
-        state: 'CONSTRUCTION',
+        stage: 'BIDDING',
       },
       {
         name: 'Ocean Heights',
         status: 'CLOSED',
-        state: 'BIDDING',
+        stage: 'BIDDING',
       },
     ],
   })
