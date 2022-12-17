@@ -29,6 +29,19 @@ const Dashboard = ({ userRole, stats }) => {
 }
 
 export async function getServerSideProps(ctx) {
+  const globalProps = await serverProps(ctx)
+
+  const { isAdmin, isManager } = globalProps.props.userRole
+
+  if (!isAdmin && !isManager) {
+    return {
+      redirect: {
+        destination: '/projects',
+        permanent: false,
+      },
+    }
+  }
+
   const stats = []
 
   try {
@@ -49,14 +62,11 @@ export async function getServerSideProps(ctx) {
     console.log(e)
   }
 
-  return {
-    ...(await serverProps(ctx)),
-    ...{
-      props: {
-        stats,
-      },
-    },
+  const props = {
+    ...globalProps.props,
   }
+
+  return { props }
 }
 
 export default Dashboard

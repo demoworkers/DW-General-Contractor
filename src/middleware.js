@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-const signedinPages = ['/', '/dashboard', '/projects', '/team', '/settings']
+const signedinPages = ['/', '/dashboard', '/projects', '/team']
 
 export default function middleware(req) {
   const { origin, pathname } = req.nextUrl

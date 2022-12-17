@@ -6,15 +6,14 @@ import { useTeam } from '../../lib/hooks'
 import { titleCase } from '../../utils/formattedString'
 
 import fetcher from '../../lib/fetcher'
+import serverProps from '../../lib/serverProps'
 
 import MainLayout from '../components/MainLayout'
 import LoadingTable from '../components/LoadingTable'
 import ActionButton from '../components/ActionButton'
 import Dropdown from '../components/Dropdown'
 
-import getServerSideProps from '../../lib/serverProps'
-
-const Team = ({ userRole }) => {
+const Team = ({ userRole }, props) => {
   const { mutate } = useSWRConfig()
 
   const { data: users, mutate: mutateAll, isLoading, isError } = useTeam()
@@ -207,6 +206,25 @@ const Team = ({ userRole }) => {
   )
 }
 
-export { getServerSideProps }
+export async function getServerSideProps(ctx) {
+  const globalProps = await serverProps(ctx)
+
+  const { isAdmin, isManager } = globalProps.props.userRole
+
+  if (!isAdmin && !isManager) {
+    return {
+      redirect: {
+        destination: '/projects',
+        permanent: false,
+      },
+    }
+  }
+
+  const props = {
+    ...globalProps.props,
+  }
+
+  return { props }
+}
 
 export default Team
