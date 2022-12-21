@@ -64,6 +64,7 @@ export async function getServerSideProps(ctx) {
 
   const props = {
     ...globalProps.props,
+    stats,
   }
 
   return { props }

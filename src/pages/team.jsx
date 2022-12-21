@@ -14,26 +14,9 @@ import ActionButton from '../components/ActionButton'
 import Dropdown from '../components/Dropdown'
 
 const Team = ({ userRole }, props) => {
-  const { mutate } = useSWRConfig()
-
   const { data: users, mutate: mutateAll, isLoading, isError } = useTeam()
 
   const handleAction = async (type, userId) => {
-    const updatedUsers = users
-      .map((user) => {
-        if (user.id === userId) {
-          if (type === 'activate') {
-            user.approved = true
-          } else if (type === 'deactivate') {
-            user.approved = false
-          } else if (type === 'delete') {
-            user = null
-          }
-        }
-        return user
-      })
-      .filter(Boolean)
-
     const response = await fetcher('team/manage', { type, userId })
 
     // error
