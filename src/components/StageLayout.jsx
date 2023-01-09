@@ -12,6 +12,7 @@ import TableWithQuotes from './TableWithQuotes'
 import { Ellipsis } from './Ellipsis'
 import ImageUpload from './ImageUpload'
 import DateSelect from './DateSelect'
+import TableDocuments from './TableDocuments'
 
 const StageLayout = ({
   userRole,
@@ -22,6 +23,7 @@ const StageLayout = ({
   const [isAuthorized, setIsAuthorized] = useState(false)
   const [contractors, setContractors] = useState('')
   const [workScope, setWorkScope] = useState([])
+  const [documents, setDocuments] = useState([])
   const [notes, setNotes] = useState('')
   const [photos, setPhotos] = useState([])
   const [colorDrawings, setColorDrawings] = useState([])
@@ -55,6 +57,10 @@ const StageLayout = ({
     if (enabledSections.tableWithQuotes) {
       const quotesTableValues = getStateValue(response, 'workScope', [])
       setWorkScope(quotesTableValues)
+    }
+    if (enabledSections.documentsUpload) {
+      const documentsTableValues = getStateValue(response, 'documents', [])
+      setDocuments(documentsTableValues)
     }
     if (enabledSections.photos) {
       const photosValues = getStateValue(response, 'photos', [])
@@ -113,6 +119,9 @@ const StageLayout = ({
     }
     if (enabledSections.tableWithQuotes) {
       config.workScope = workScope
+    }
+    if (enabledSections.tableWithQuotes) {
+      config.documents = documents
     }
     if (enabledSections.photos) {
       config.photos = photos
@@ -177,6 +186,14 @@ const StageLayout = ({
             sectionName={enabledSections.sectionName}
             items={workScope}
             setItems={setWorkScope}
+          />
+        )}
+        {enabledSections.documentsUpload && (
+          <TableDocuments
+            userRole={userRole}
+            sectionName={enabledSections.documentsSectionName}
+            items={documents}
+            setItems={setDocuments}
           />
         )}
         {enabledSections.photos && (

@@ -17,6 +17,8 @@ const ENABLED_SECTIONS = {
   BIDDING: {
     contractors: true,
     tableWithQuotes: true,
+    documentsUpload: true,
+    documentsSectionName: 'Documents',
     photos: true,
     notes: true,
     sectionName: 'Scope of Work',
@@ -24,6 +26,8 @@ const ENABLED_SECTIONS = {
   MATERIAL_SELECTION: {
     contractors: true,
     tableWithQuotes: true,
+    documentsUpload: true,
+    documentsSectionName: 'Documents',
     photos: true,
     notes: true,
     sectionName: 'Materials',
@@ -34,6 +38,8 @@ const ENABLED_SECTIONS = {
   },
   RECONSTRUCTION: {
     contractors: true,
+    documentsUpload: true,
+    documentsSectionName: 'Documents',
     photos: true,
     notes: true,
   },
