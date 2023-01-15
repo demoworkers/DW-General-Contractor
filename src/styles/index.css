@@ -230,3 +230,8 @@ input.p-inputnumber-input {
   border-color: var(--panel-border-color) !important;
   border-radius: var(--panel-border-radius) !important;
 }
+
+/* Project */
+.project-list-notes-container p {
+  display: inline-block;
+}

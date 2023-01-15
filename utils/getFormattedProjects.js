@@ -15,6 +15,7 @@ export const getFormattedProjects = (projects) => {
       name: project.name,
       stage: project.stage,
       status: project.status,
+      notes: project.notes,
       createdOn: projectCreatedDate,
     })
   })

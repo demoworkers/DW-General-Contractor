@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
-import { useSWRConfig } from 'swr'
 
+import { Markup } from 'interweave'
 import toast from 'react-hot-toast'
 
 import fetcher from '../../../lib/fetcher'
@@ -92,7 +92,29 @@ const Projects = ({ userRole }) => {
     handleSliderOverClose(false)
   }
 
-  const renderUsersOrEmpty = (renderProjects) => {
+  const renderNotes = (notes) => {
+    return notes.length === 0 ? null : (
+      <ul className="max-w-md ml-4 space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
+        {notes.map((note) => (
+          <li key={note.id}>
+            <span>{note.name}</span>
+            <ul className="max-w-md ml-4 space-y-1 text-gray-500 list-disc dark:text-gray-400">
+              {note.entries.map((entry) => (
+                <li
+                  key={`${note.id}-${entry.id}`}
+                  className="ml-2 project-list-notes-container"
+                >
+                  <Markup content={entry.entry} />
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  const renderDataOrEmpty = (renderProjects) => {
     if (renderProjects.length !== 0) {
       return renderProjects.map((project) => (
         <tr key={project.id}>
@@ -105,6 +127,7 @@ const Projects = ({ userRole }) => {
                 {project.name}
               </Link>
             </div>
+            {renderNotes(project.notes)}
           </td>
           <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
             <span className="inline-flex px-2 text-xs font-semibold leading-5 text-gray-800 capitalize rounded-sm bg-slate-100">
@@ -222,7 +245,7 @@ const Projects = ({ userRole }) => {
                         </td>
                       </tr>
                     ) : (
-                      renderUsersOrEmpty(projects)
+                      renderDataOrEmpty(projects)
                     )}
                   </tbody>
                 </table>

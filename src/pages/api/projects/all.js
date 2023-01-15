@@ -14,6 +14,23 @@ export default validateRoute(async (req, res, user) => {
         status: true,
         createdAt: true,
         projectDetails: true,
+        notes: {
+          select: {
+            id: true,
+            name: true,
+            entries: {
+              select: {
+                id: true,
+                entry: true,
+                created_by: {
+                  select: {
+                    firstName: true,
+                  },
+                },
+              },
+            },
+          },
+        },
       },
       orderBy: { createdAt: 'desc' },
     })
@@ -38,7 +55,8 @@ export default validateRoute(async (req, res, user) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: 'Projects not loaded',
+      // error: 'Projects not loaded',
+      error: error.message,
     })
   }
 })

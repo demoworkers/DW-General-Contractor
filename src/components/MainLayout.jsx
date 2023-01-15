@@ -20,11 +20,11 @@ let navigation = [
   {
     name: 'Dashboard',
     forAdmin: true,
-    href: '/dashboard',
+    href: '/projects',
     icon: HomeIcon,
     current: true,
   },
-  { name: 'Projects', href: '/projects', icon: BuildingOffice2Icon },
+  // { name: 'Projects', href: '/projects', icon: BuildingOffice2Icon },
   {
     name: 'Team',
     forAdmin: true,
